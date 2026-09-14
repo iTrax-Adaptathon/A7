@@ -28,7 +28,10 @@ class AdaptiveEngine {
 
     // 2. Analyzers
     final double perfScore = PerformanceAnalyzer.analyze(signals);
-    final double recScore = RecoveryAnalyzer.analyze(signals, userProfile: userProfile);
+    final double recScore = RecoveryAnalyzer.analyze(
+      signals,
+      userProfile: userProfile,
+    );
     final trend = TrendAnalyzer.analyze(history);
 
     // 3. Readiness Model
@@ -51,10 +54,19 @@ class AdaptiveEngine {
     }
 
     // 4. Strategy Selection
+    final AdaptationType decision = selectAdaptationType(
+      readinessScore: readinessEval.readinessScore,
+      performanceScore: perfScore,
+      recoveryScore: recScore,
+      trend: trend,
+      historyCount: history.length,
+      discomfortLevel: recovery?.discomfortLevel,
+    );
+
     AdjustmentStrategy strategy;
-    if (recovery?.discomfortLevel == 'Significant' || readinessEval.readinessScore < 55.0) {
+    if (decision == AdaptationType.regress) {
       strategy = RegressStrategy();
-    } else if (readinessEval.readinessScore >= 75.0 && perfScore >= 75.0 && recScore >= 65.0) {
+    } else if (decision == AdaptationType.progress) {
       strategy = ProgressStrategy();
     } else {
       strategy = MaintainStrategy();
@@ -70,5 +82,37 @@ class AdaptiveEngine {
       currentSets: currentSets,
       baseFactors: readinessEval.factors,
     );
+  }
+
+  /// Chooses an adjustment only when the current signal agrees with the
+  /// recent direction. Significant discomfort remains a conservative safety
+  /// override. With fewer than two historical sessions, there is no trend to
+  /// corroborate, so the initial recommendation uses the current baseline.
+  static AdaptationType selectAdaptationType({
+    required double readinessScore,
+    required double performanceScore,
+    required double recoveryScore,
+    required TrendAnalysis trend,
+    required int historyCount,
+    String? discomfortLevel,
+  }) {
+    if (discomfortLevel == 'Significant') return AdaptationType.regress;
+
+    final bool needsTrendConfirmation = historyCount >= 2;
+    final bool canProgress =
+        readinessScore >= 75.0 &&
+        performanceScore >= 75.0 &&
+        recoveryScore >= 65.0 &&
+        (!needsTrendConfirmation ||
+            trend.direction == TrendDirection.improving);
+    if (canProgress) return AdaptationType.progress;
+
+    final bool canRegress =
+        readinessScore < 55.0 &&
+        (!needsTrendConfirmation ||
+            trend.direction == TrendDirection.declining);
+    if (canRegress) return AdaptationType.regress;
+
+    return AdaptationType.maintain;
   }
 }

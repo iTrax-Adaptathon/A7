@@ -8,7 +8,8 @@ class PerformanceAnalyzer {
     // Load compliance: 30%
     // Manageable difficulty: 20%
     final double repScore = (signals.repCompletionRatio.clamp(0.0, 1.0)) * 50.0;
-    final double loadScore = (signals.loadComplianceRatio.clamp(0.0, 1.0)) * 30.0;
+    final double loadScore =
+        (signals.loadComplianceRatio.clamp(0.0, 1.0)) * 30.0;
     final double diffScore = signals.difficultyFactor * 20.0;
 
     final double total = repScore + loadScore + diffScore;

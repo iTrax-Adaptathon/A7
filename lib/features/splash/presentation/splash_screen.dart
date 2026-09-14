@@ -41,24 +41,24 @@ class _SplashScreenState extends State<SplashScreen> {
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             Container(
-              padding: const EdgeInsets.all(24),
-              decoration: BoxDecoration(
-                gradient: AppColors.brandGradient,
-                borderRadius: BorderRadius.circular(28),
-                boxShadow: [
-                  BoxShadow(
-                    color: AppColors.primary.withAlpha(100),
-                    blurRadius: 30,
-                    offset: const Offset(0, 10),
+                  padding: const EdgeInsets.all(24),
+                  decoration: BoxDecoration(
+                    gradient: AppColors.brandGradient,
+                    borderRadius: BorderRadius.circular(28),
+                    boxShadow: [
+                      BoxShadow(
+                        color: AppColors.primary.withAlpha(100),
+                        blurRadius: 30,
+                        offset: const Offset(0, 10),
+                      ),
+                    ],
                   ),
-                ],
-              ),
-              child: const Icon(
-                Icons.bolt_rounded,
-                size: 64,
-                color: Colors.white,
-              ),
-            )
+                  child: const Icon(
+                    Icons.bolt_rounded,
+                    size: 64,
+                    color: Colors.white,
+                  ),
+                )
                 .animate()
                 .scale(duration: 600.ms, curve: Curves.easeOutBack)
                 .shimmer(delay: 800.ms, duration: 1000.ms),
@@ -68,10 +68,10 @@ class _SplashScreenState extends State<SplashScreen> {
             Text(
               AppConstants.appName,
               style: Theme.of(context).textTheme.displayMedium?.copyWith(
-                    fontWeight: FontWeight.w900,
-                    letterSpacing: 4,
-                    color: AppColors.textPrimary,
-                  ),
+                fontWeight: FontWeight.w900,
+                letterSpacing: 4,
+                color: AppColors.textPrimary,
+              ),
             ).animate().fadeIn(delay: 300.ms).slideY(begin: 0.2, end: 0),
 
             const SizedBox(height: 12),
@@ -79,9 +79,9 @@ class _SplashScreenState extends State<SplashScreen> {
             Text(
               AppConstants.tagline,
               style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                    color: AppColors.textSecondary,
-                    fontWeight: FontWeight.w500,
-                  ),
+                color: AppColors.textSecondary,
+                fontWeight: FontWeight.w500,
+              ),
             ).animate().fadeIn(delay: 600.ms),
 
             const SizedBox(height: 48),

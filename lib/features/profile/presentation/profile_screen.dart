@@ -18,9 +18,7 @@ class ProfileScreen extends StatelessWidget {
 
     return Scaffold(
       backgroundColor: AppColors.background,
-      appBar: AppBar(
-        title: const Text('Athlete Profile & Settings'),
-      ),
+      appBar: AppBar(title: const Text('Athlete Profile & Settings')),
       body: SafeArea(
         child: ListView(
           padding: const EdgeInsets.all(20),
@@ -38,7 +36,11 @@ class ProfileScreen extends StatelessWidget {
                           backgroundColor: AppColors.primary,
                           child: Text(
                             (user?.name ?? 'U').substring(0, 1).toUpperCase(),
-                            style: const TextStyle(fontSize: 24, fontWeight: FontWeight.bold, color: Colors.white),
+                            style: const TextStyle(
+                              fontSize: 24,
+                              fontWeight: FontWeight.bold,
+                              color: Colors.white,
+                            ),
                           ),
                         ),
                         const SizedBox(width: 16),
@@ -46,10 +48,21 @@ class ProfileScreen extends StatelessWidget {
                           child: Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
-                              Text(user?.name ?? 'Sanjo', style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
+                              Text(
+                                user?.name ?? 'Sanjo',
+                                style: const TextStyle(
+                                  fontSize: 18,
+                                  fontWeight: FontWeight.bold,
+                                ),
+                              ),
                               const SizedBox(height: 4),
-                              Text('${user?.fitnessLevel ?? 'Intermediate'} • ${user?.primaryGoal ?? 'Strength'}',
-                                  style: const TextStyle(color: AppColors.textSecondary, fontSize: 13)),
+                              Text(
+                                '${user?.fitnessLevel ?? 'Intermediate'} • ${user?.primaryGoal ?? 'Strength'}',
+                                style: const TextStyle(
+                                  color: AppColors.textSecondary,
+                                  fontSize: 13,
+                                ),
+                              ),
                             ],
                           ),
                         ),
@@ -66,10 +79,26 @@ class ProfileScreen extends StatelessWidget {
                     Row(
                       mainAxisAlignment: MainAxisAlignment.spaceAround,
                       children: [
-                        _buildMetricTile('SEX', user?.sex ?? 'Male', Icons.wc_rounded),
-                        _buildMetricTile('HEIGHT', '${user?.height.toStringAsFixed(0) ?? '175'} cm', Icons.height_rounded),
-                        _buildMetricTile('WEIGHT', '${user?.weight.toStringAsFixed(0) ?? '70'} kg', Icons.monitor_weight_outlined),
-                        _buildMetricTile('BMI', '${user?.bmi.toStringAsFixed(1) ?? '22.9'} (${user?.bmiCategory ?? 'Normal'})', Icons.speed_rounded),
+                        _buildMetricTile(
+                          'SEX',
+                          user?.sex ?? 'Male',
+                          Icons.wc_rounded,
+                        ),
+                        _buildMetricTile(
+                          'HEIGHT',
+                          '${user?.height.toStringAsFixed(0) ?? '175'} cm',
+                          Icons.height_rounded,
+                        ),
+                        _buildMetricTile(
+                          'WEIGHT',
+                          '${user?.weight.toStringAsFixed(0) ?? '70'} kg',
+                          Icons.monitor_weight_outlined,
+                        ),
+                        _buildMetricTile(
+                          'BMI',
+                          '${user?.bmi.toStringAsFixed(1) ?? '22.9'} (${user?.bmiCategory ?? 'Normal'})',
+                          Icons.speed_rounded,
+                        ),
                       ],
                     ),
                   ],
@@ -77,16 +106,18 @@ class ProfileScreen extends StatelessWidget {
               ),
             ).animate().fadeIn(),
 
-            if (user != null && user.sex == 'Female' && user.trackMenstrualCycle) ...[
+            if (user != null &&
+                user.sex == 'Female' &&
+                user.trackMenstrualCycle) ...[
               const SizedBox(height: 24),
               // Menstrual Cycle Tracking Insights Card
               Text(
                 'CYCLE & HORMONAL INSIGHTS',
                 style: Theme.of(context).textTheme.titleSmall?.copyWith(
-                      fontWeight: FontWeight.bold,
-                      letterSpacing: 1.2,
-                      color: AppColors.accent,
-                    ),
+                  fontWeight: FontWeight.bold,
+                  letterSpacing: 1.2,
+                  color: AppColors.accent,
+                ),
               ).animate().fadeIn(delay: 50.ms),
               const SizedBox(height: 10),
               Card(
@@ -103,25 +134,42 @@ class ProfileScreen extends StatelessWidget {
                               color: AppColors.accent.withAlpha(38),
                               borderRadius: BorderRadius.circular(10),
                             ),
-                            child: const Icon(Icons.water_drop_rounded, color: AppColors.accent, size: 22),
+                            child: const Icon(
+                              Icons.water_drop_rounded,
+                              color: AppColors.accent,
+                              size: 22,
+                            ),
                           ),
                           const SizedBox(width: 12),
                           Expanded(
                             child: Column(
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
-                                const Text('Current Phase', style: TextStyle(fontSize: 12, color: AppColors.textSecondary)),
+                                const Text(
+                                  'Current Phase',
+                                  style: TextStyle(
+                                    fontSize: 12,
+                                    color: AppColors.textSecondary,
+                                  ),
+                                ),
                                 const SizedBox(height: 2),
                                 Text(
                                   user.currentMenstrualPhase ?? 'Not set',
-                                  style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold, color: Colors.white),
+                                  style: const TextStyle(
+                                    fontSize: 16,
+                                    fontWeight: FontWeight.bold,
+                                    color: Colors.white,
+                                  ),
                                 ),
                               ],
                             ),
                           ),
                           if (user.daysUntilNextPeriod != null)
                             Container(
-                              padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 6),
+                              padding: const EdgeInsets.symmetric(
+                                horizontal: 10,
+                                vertical: 6,
+                              ),
                               decoration: BoxDecoration(
                                 color: AppColors.surface,
                                 borderRadius: BorderRadius.circular(20),
@@ -129,7 +177,11 @@ class ProfileScreen extends StatelessWidget {
                               ),
                               child: Text(
                                 '${user.daysUntilNextPeriod} days to period',
-                                style: const TextStyle(fontSize: 11, fontWeight: FontWeight.w600, color: AppColors.accent),
+                                style: const TextStyle(
+                                  fontSize: 11,
+                                  fontWeight: FontWeight.w600,
+                                  color: AppColors.accent,
+                                ),
                               ),
                             ),
                         ],
@@ -140,15 +192,23 @@ class ProfileScreen extends StatelessWidget {
                       Row(
                         children: [
                           Expanded(
-                            child: _buildCycleDetailItem('Cycle Length', '${user.cycleLengthDays} days'),
+                            child: _buildCycleDetailItem(
+                              'Cycle Length',
+                              '${user.cycleLengthDays} days',
+                            ),
                           ),
                           Expanded(
-                            child: _buildCycleDetailItem('Period Duration', '${user.periodDurationDays} days'),
+                            child: _buildCycleDetailItem(
+                              'Period Duration',
+                              '${user.periodDurationDays} days',
+                            ),
                           ),
                           Expanded(
                             child: _buildCycleDetailItem(
                               'Cycle Day',
-                              user.currentCycleDay != null ? 'Day ${user.currentCycleDay}' : 'N/A',
+                              user.currentCycleDay != null
+                                  ? 'Day ${user.currentCycleDay}'
+                                  : 'N/A',
                             ),
                           ),
                         ],
@@ -165,10 +225,10 @@ class ProfileScreen extends StatelessWidget {
             Text(
               'COMPETITION DEMO MODE',
               style: Theme.of(context).textTheme.titleSmall?.copyWith(
-                    fontWeight: FontWeight.bold,
-                    letterSpacing: 1.2,
-                    color: AppColors.primary,
-                  ),
+                fontWeight: FontWeight.bold,
+                letterSpacing: 1.2,
+                color: AppColors.primary,
+              ),
             ).animate().fadeIn(delay: 100.ms),
 
             const SizedBox(height: 10),
@@ -180,18 +240,27 @@ class ProfileScreen extends StatelessWidget {
                     value: isDemo,
                     activeTrackColor: AppColors.primary,
                     title: const Text('Activate Demo Data'),
-                    subtitle: const Text('Seeds 3 historical sessions (Regress, Maintain, Progress)'),
+                    subtitle: const Text(
+                      'Seeds 3 historical sessions (Regress, Maintain, Progress)',
+                    ),
                     onChanged: (val) => provider.toggleDemoMode(val),
                   ),
                   const Divider(height: 1, color: AppColors.cardBorder),
                   ListTile(
-                    leading: const Icon(Icons.restart_alt_rounded, color: AppColors.regress),
+                    leading: const Icon(
+                      Icons.restart_alt_rounded,
+                      color: AppColors.regress,
+                    ),
                     title: const Text('Re-seed Demo Sessions'),
-                    subtitle: const Text('Resets adaptive history to initial baseline'),
+                    subtitle: const Text(
+                      'Resets adaptive history to initial baseline',
+                    ),
                     onTap: () {
                       provider.toggleDemoMode(true);
                       ScaffoldMessenger.of(context).showSnackBar(
-                        const SnackBar(content: Text('Demo historical sessions re-seeded!')),
+                        const SnackBar(
+                          content: Text('Demo historical sessions re-seeded!'),
+                        ),
                       );
                     },
                   ),
@@ -211,17 +280,36 @@ class ProfileScreen extends StatelessWidget {
                   children: [
                     const Row(
                       children: [
-                        Icon(Icons.info_outline_rounded, color: AppColors.primary),
+                        Icon(
+                          Icons.info_outline_rounded,
+                          color: AppColors.primary,
+                        ),
                         SizedBox(width: 10),
-                        Text(AppConstants.appName, style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16)),
+                        Text(
+                          AppConstants.appName,
+                          style: TextStyle(
+                            fontWeight: FontWeight.bold,
+                            fontSize: 16,
+                          ),
+                        ),
                       ],
                     ),
                     const SizedBox(height: 8),
-                    const Text('Version: ${AppConstants.version}', style: TextStyle(fontSize: 12, color: AppColors.textSecondary)),
+                    const Text(
+                      'Version: ${AppConstants.version}',
+                      style: TextStyle(
+                        fontSize: 12,
+                        color: AppColors.textSecondary,
+                      ),
+                    ),
                     const SizedBox(height: 4),
                     const Text(
                       'Modular Flutter adaptive engine built for Adaptathon. Domain layer handles Signal Normalization, Performance/Recovery Analysis, Readiness Modeling, and Strategy Generators.',
-                      style: TextStyle(fontSize: 12, color: AppColors.textSecondary, height: 1.4),
+                      style: TextStyle(
+                        fontSize: 12,
+                        color: AppColors.textSecondary,
+                        height: 1.4,
+                      ),
                     ),
                   ],
                 ),
@@ -238,9 +326,23 @@ class ProfileScreen extends StatelessWidget {
       children: [
         Icon(icon, color: AppColors.primary, size: 20),
         const SizedBox(height: 4),
-        Text(value, style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 13, color: Colors.white)),
+        Text(
+          value,
+          style: const TextStyle(
+            fontWeight: FontWeight.bold,
+            fontSize: 13,
+            color: Colors.white,
+          ),
+        ),
         const SizedBox(height: 2),
-        Text(label, style: const TextStyle(fontSize: 10, color: AppColors.textSecondary, fontWeight: FontWeight.w600)),
+        Text(
+          label,
+          style: const TextStyle(
+            fontSize: 10,
+            color: AppColors.textSecondary,
+            fontWeight: FontWeight.w600,
+          ),
+        ),
       ],
     );
   }
@@ -249,11 +351,20 @@ class ProfileScreen extends StatelessWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Text(title, style: const TextStyle(fontSize: 11, color: AppColors.textSecondary)),
+        Text(
+          title,
+          style: const TextStyle(fontSize: 11, color: AppColors.textSecondary),
+        ),
         const SizedBox(height: 4),
-        Text(detail, style: const TextStyle(fontSize: 13, fontWeight: FontWeight.bold, color: Colors.white)),
+        Text(
+          detail,
+          style: const TextStyle(
+            fontSize: 13,
+            fontWeight: FontWeight.bold,
+            color: Colors.white,
+          ),
+        ),
       ],
     );
   }
 }
-

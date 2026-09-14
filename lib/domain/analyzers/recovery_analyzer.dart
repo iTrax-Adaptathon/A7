@@ -15,7 +15,9 @@ class RecoveryAnalyzer {
     double total = sleepPart + energyPart + discomfortPart;
 
     // Backend Menstrual Cycle Adaptation Modifier
-    if (userProfile != null && userProfile.sex == 'Female' && userProfile.trackMenstrualCycle) {
+    if (userProfile != null &&
+        userProfile.sex == 'Female' &&
+        userProfile.trackMenstrualCycle) {
       final phase = userProfile.currentMenstrualPhase;
       if (phase != null) {
         if (phase.contains('Menstrual')) {
@@ -37,4 +39,3 @@ class RecoveryAnalyzer {
     return total.clamp(0.0, 100.0);
   }
 }
-

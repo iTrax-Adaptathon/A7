@@ -1,10 +1,6 @@
 import '../../data/models/workout_session.dart';
 
-enum TrendDirection {
-  improving,
-  stable,
-  declining,
-}
+enum TrendDirection { improving, stable, declining }
 
 class TrendAnalysis {
   final TrendDirection direction;

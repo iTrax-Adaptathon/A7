@@ -4,10 +4,10 @@ import '../../data/models/recovery_record.dart';
 class NormalizedSignals {
   final double repCompletionRatio; // 0.0 to 1.0
   final double loadComplianceRatio; // 0.0 to 1.0
-  final double difficultyFactor;    // 0.0 to 1.0 (higher is better/easier)
-  final double sleepFactor;         // 0.0 to 1.0 (8h optimal)
-  final double energyFactor;        // 0.0 to 1.0
-  final double discomfortFactor;    // 0.0 to 1.0 (1.0 = None, 0.3 = Significant)
+  final double difficultyFactor; // 0.0 to 1.0 (higher is better/easier)
+  final double sleepFactor; // 0.0 to 1.0 (8h optimal)
+  final double energyFactor; // 0.0 to 1.0
+  final double discomfortFactor; // 0.0 to 1.0 (1.0 = None, 0.3 = Significant)
 
   NormalizedSignals({
     required this.repCompletionRatio,
@@ -61,7 +61,9 @@ class SignalNormalizer {
         ? (totalActualWeight / totalTargetWeight).clamp(0.0, 1.2)
         : 1.0;
 
-    final double avgDifficulty = exerciseCount > 0 ? totalDifficulty / exerciseCount : 3.0;
+    final double avgDifficulty = exerciseCount > 0
+        ? totalDifficulty / exerciseCount
+        : 3.0;
     // Rating 1 (very easy) -> 1.0, Rating 5 (extremely hard) -> 0.1
     final double diffFactor = ((5.5 - avgDifficulty) / 4.5).clamp(0.1, 1.0);
 

@@ -15,9 +15,7 @@ class ProgressScreen extends StatelessWidget {
 
     return Scaffold(
       backgroundColor: AppColors.background,
-      appBar: AppBar(
-        title: const Text('Performance & Visualizations'),
-      ),
+      appBar: AppBar(title: const Text('Performance & Visualizations')),
       body: SafeArea(
         child: SingleChildScrollView(
           padding: const EdgeInsets.all(20),
@@ -26,9 +24,8 @@ class ProgressScreen extends StatelessWidget {
             children: [
               Text(
                 'Training Progress Analytics',
-                style: Theme.of(context).textTheme.headlineSmall?.copyWith(
-                      fontWeight: FontWeight.bold,
-                    ),
+                style: Theme.of(context).textTheme.headlineSmall
+                    ?.copyWith(fontWeight: FontWeight.bold),
               ).animate().fadeIn(),
 
               const SizedBox(height: 6),
@@ -74,8 +71,21 @@ class ProgressScreen extends StatelessWidget {
                       const Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
-                          Text('BENCH PRESS LOAD TREND', style: TextStyle(fontWeight: FontWeight.bold, fontSize: 14, color: AppColors.primary)),
-                          Text('Last 5 Sessions', style: TextStyle(fontSize: 11, color: AppColors.textSecondary)),
+                          Text(
+                            'BENCH PRESS LOAD TREND',
+                            style: TextStyle(
+                              fontWeight: FontWeight.bold,
+                              fontSize: 14,
+                              color: AppColors.primary,
+                            ),
+                          ),
+                          Text(
+                            'Last 5 Sessions',
+                            style: TextStyle(
+                              fontSize: 11,
+                              color: AppColors.textSecondary,
+                            ),
+                          ),
                         ],
                       ),
                       const SizedBox(height: 20),
@@ -101,13 +111,31 @@ class ProgressScreen extends StatelessWidget {
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      const Text('RECOVERY & HYGIENE INDEX', style: TextStyle(fontWeight: FontWeight.bold, fontSize: 14)),
+                      const Text(
+                        'RECOVERY & HYGIENE INDEX',
+                        style: TextStyle(
+                          fontWeight: FontWeight.bold,
+                          fontSize: 14,
+                        ),
+                      ),
                       const SizedBox(height: 12),
-                      _buildProgressBar('Average Sleep Quality (7.8h optimal)', 0.85, AppColors.progress),
+                      _buildProgressBar(
+                        'Average Sleep Quality (7.8h optimal)',
+                        0.85,
+                        AppColors.progress,
+                      ),
                       const SizedBox(height: 12),
-                      _buildProgressBar('Energy Consistency', 0.75, AppColors.maintain),
+                      _buildProgressBar(
+                        'Energy Consistency',
+                        0.75,
+                        AppColors.maintain,
+                      ),
                       const SizedBox(height: 12),
-                      _buildProgressBar('Low Discomfort Score', 0.90, AppColors.primary),
+                      _buildProgressBar(
+                        'Low Discomfort Score',
+                        0.90,
+                        AppColors.primary,
+                      ),
                     ],
                   ),
                 ),
@@ -132,9 +160,19 @@ class ProgressScreen extends StatelessWidget {
         children: [
           Icon(icon, color: color, size: 24),
           const SizedBox(height: 12),
-          Text(title, style: const TextStyle(fontSize: 11, fontWeight: FontWeight.bold, color: AppColors.textSecondary)),
+          Text(
+            title,
+            style: const TextStyle(
+              fontSize: 11,
+              fontWeight: FontWeight.bold,
+              color: AppColors.textSecondary,
+            ),
+          ),
           const SizedBox(height: 4),
-          Text(val, style: const TextStyle(fontSize: 22, fontWeight: FontWeight.bold)),
+          Text(
+            val,
+            style: const TextStyle(fontSize: 22, fontWeight: FontWeight.bold),
+          ),
         ],
       ),
     );
@@ -151,14 +189,21 @@ class ProgressScreen extends StatelessWidget {
 
     final items = history.take(5).toList().reversed.toList();
     return items.map((s) {
-      final double weight = (s.exerciseSessions.isNotEmpty && s.exerciseSessions.first.sets.isNotEmpty)
+      final double weight =
+          (s.exerciseSessions.isNotEmpty &&
+              s.exerciseSessions.first.sets.isNotEmpty)
           ? s.exerciseSessions.first.sets.first.actualWeight
           : 50.0;
       Color col = AppColors.maintain;
       if (s.adaptationType == 'progress') col = AppColors.progress;
       if (s.adaptationType == 'regress') col = AppColors.regress;
 
-      return _buildSingleBar('S${s.id.substring(s.id.length - 1)}', weight, 60.0, col);
+      return _buildSingleBar(
+        'S${s.id.substring(s.id.length - 1)}',
+        weight,
+        60.0,
+        col,
+      );
     }).toList();
   }
 
@@ -168,7 +213,14 @@ class ProgressScreen extends StatelessWidget {
     return Column(
       mainAxisAlignment: MainAxisAlignment.end,
       children: [
-        Text('${val.toInt()}kg', style: const TextStyle(fontSize: 10, fontWeight: FontWeight.bold, color: AppColors.textSecondary)),
+        Text(
+          '${val.toInt()}kg',
+          style: const TextStyle(
+            fontSize: 10,
+            fontWeight: FontWeight.bold,
+            color: AppColors.textSecondary,
+          ),
+        ),
         const SizedBox(height: 6),
         Container(
           width: 32,
@@ -179,7 +231,10 @@ class ProgressScreen extends StatelessWidget {
           ),
         ),
         const SizedBox(height: 8),
-        Text(label, style: const TextStyle(fontSize: 11, color: AppColors.textSecondary)),
+        Text(
+          label,
+          style: const TextStyle(fontSize: 11, color: AppColors.textSecondary),
+        ),
       ],
     );
   }
@@ -191,8 +246,17 @@ class ProgressScreen extends StatelessWidget {
         Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
-            Text(title, style: const TextStyle(fontSize: 12, color: AppColors.textSecondary)),
-            Text('${(pct * 100).toInt()}%', style: TextStyle(fontWeight: FontWeight.bold, color: color)),
+            Text(
+              title,
+              style: const TextStyle(
+                fontSize: 12,
+                color: AppColors.textSecondary,
+              ),
+            ),
+            Text(
+              '${(pct * 100).toInt()}%',
+              style: TextStyle(fontWeight: FontWeight.bold, color: color),
+            ),
           ],
         ),
         const SizedBox(height: 6),

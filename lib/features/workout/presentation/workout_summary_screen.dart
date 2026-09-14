@@ -18,7 +18,9 @@ class WorkoutSummaryScreen extends StatelessWidget {
       return Scaffold(
         backgroundColor: AppColors.background,
         appBar: AppBar(title: const Text('Summary')),
-        body: const Center(child: Text('No completed workout summary available.')),
+        body: const Center(
+          child: Text('No completed workout summary available.'),
+        ),
       );
     }
 
@@ -56,12 +58,17 @@ class WorkoutSummaryScreen extends StatelessWidget {
                           ),
                         ],
                       ),
-                      child: const Icon(Icons.workspace_premium_rounded, size: 48, color: Colors.white),
+                      child: const Icon(
+                        Icons.workspace_premium_rounded,
+                        size: 48,
+                        color: Colors.white,
+                      ),
                     ),
                     const SizedBox(height: 16),
                     Text(
                       'WORKOUT COMPLETE',
-                      style: Theme.of(context).textTheme.headlineSmall?.copyWith(
+                      style: Theme.of(context).textTheme.headlineSmall
+                          ?.copyWith(
                             fontWeight: FontWeight.w900,
                             letterSpacing: 1.5,
                           ),
@@ -69,7 +76,10 @@ class WorkoutSummaryScreen extends StatelessWidget {
                     const SizedBox(height: 4),
                     const Text(
                       'Adaptive Engine process completed successfully.',
-                      style: TextStyle(color: AppColors.textSecondary, fontSize: 13),
+                      style: TextStyle(
+                        color: AppColors.textSecondary,
+                        fontSize: 13,
+                      ),
                     ),
                   ],
                 ),
@@ -126,16 +136,28 @@ class WorkoutSummaryScreen extends StatelessWidget {
                           Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
-                              const Text('BENCH PRESS', style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16)),
+                              const Text(
+                                'BENCH PRESS',
+                                style: TextStyle(
+                                  fontWeight: FontWeight.bold,
+                                  fontSize: 16,
+                                ),
+                              ),
                               const SizedBox(height: 4),
                               Text(
                                 'Previous: 50.0 kg × 8',
-                                style: const TextStyle(fontSize: 12, color: AppColors.textSecondary),
+                                style: const TextStyle(
+                                  fontSize: 12,
+                                  color: AppColors.textSecondary,
+                                ),
                               ),
                             ],
                           ),
                           Container(
-                            padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 8),
+                            padding: const EdgeInsets.symmetric(
+                              horizontal: 14,
+                              vertical: 8,
+                            ),
                             decoration: BoxDecoration(
                               color: AppColors.progress.withAlpha(30),
                               borderRadius: BorderRadius.circular(12),
@@ -144,10 +166,21 @@ class WorkoutSummaryScreen extends StatelessWidget {
                             child: Column(
                               crossAxisAlignment: CrossAxisAlignment.end,
                               children: [
-                                const Text('RECOMMENDED', style: TextStyle(fontSize: 10, fontWeight: FontWeight.bold, color: AppColors.progress)),
+                                const Text(
+                                  'RECOMMENDED',
+                                  style: TextStyle(
+                                    fontSize: 10,
+                                    fontWeight: FontWeight.bold,
+                                    color: AppColors.progress,
+                                  ),
+                                ),
                                 Text(
                                   '${recWeight.toStringAsFixed(1)} kg × $recReps',
-                                  style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold, color: AppColors.progress),
+                                  style: const TextStyle(
+                                    fontSize: 16,
+                                    fontWeight: FontWeight.bold,
+                                    color: AppColors.progress,
+                                  ),
                                 ),
                               ],
                             ),
@@ -171,11 +204,19 @@ class WorkoutSummaryScreen extends StatelessWidget {
                     children: [
                       const Row(
                         children: [
-                          Icon(Icons.psychology_rounded, color: AppColors.primary, size: 22),
+                          Icon(
+                            Icons.psychology_rounded,
+                            color: AppColors.primary,
+                            size: 22,
+                          ),
                           SizedBox(width: 10),
                           Text(
                             'WHY DID THIS CHANGE?',
-                            style: TextStyle(fontWeight: FontWeight.bold, fontSize: 14, letterSpacing: 1.1),
+                            style: TextStyle(
+                              fontWeight: FontWeight.bold,
+                              fontSize: 14,
+                              letterSpacing: 1.1,
+                            ),
                           ),
                         ],
                       ),
@@ -187,11 +228,20 @@ class WorkoutSummaryScreen extends StatelessWidget {
                             child: Row(
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
-                                const Text('• ', style: TextStyle(fontWeight: FontWeight.bold, color: AppColors.primary)),
+                                const Text(
+                                  '• ',
+                                  style: TextStyle(
+                                    fontWeight: FontWeight.bold,
+                                    color: AppColors.primary,
+                                  ),
+                                ),
                                 Expanded(
                                   child: Text(
                                     reason,
-                                    style: const TextStyle(fontSize: 13, height: 1.4),
+                                    style: const TextStyle(
+                                      fontSize: 13,
+                                      height: 1.4,
+                                    ),
                                   ),
                                 ),
                               ],
@@ -220,7 +270,12 @@ class WorkoutSummaryScreen extends StatelessWidget {
     );
   }
 
-  Widget _buildMetricTile(String title, String value, IconData icon, Color color) {
+  Widget _buildMetricTile(
+    String title,
+    String value,
+    IconData icon,
+    Color color,
+  ) {
     return Container(
       padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
@@ -233,9 +288,18 @@ class WorkoutSummaryScreen extends StatelessWidget {
         children: [
           Icon(icon, color: color, size: 22),
           const SizedBox(height: 10),
-          Text(title, style: const TextStyle(fontSize: 11, color: AppColors.textSecondary)),
+          Text(
+            title,
+            style: const TextStyle(
+              fontSize: 11,
+              color: AppColors.textSecondary,
+            ),
+          ),
           const SizedBox(height: 2),
-          Text(value, style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
+          Text(
+            value,
+            style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+          ),
         ],
       ),
     );

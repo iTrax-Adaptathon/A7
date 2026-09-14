@@ -5,9 +5,9 @@ class UserProfile {
   final double height; // in cm
   final double weight; // in kg
   final String fitnessLevel; // Beginner, Intermediate, Advanced
-  final String primaryGoal;  // Strength, Muscle Gain, General Fitness
-  final String frequency;    // 3 days/week, 4 days/week, 5 days/week
-  
+  final String primaryGoal; // Strength, Muscle Gain, General Fitness
+  final String frequency; // 3 days/week, 4 days/week, 5 days/week
+
   // Menstrual Cycle Tracking (Optional, for female athletes)
   final bool trackMenstrualCycle;
   final int cycleLengthDays; // Default 28
@@ -29,7 +29,8 @@ class UserProfile {
     this.lastPeriodStartDate,
   });
 
-  double get bmi => (height > 0) ? weight / ((height / 100) * (height / 100)) : 0.0;
+  double get bmi =>
+      (height > 0) ? weight / ((height / 100) * (height / 100)) : 0.0;
 
   String get bmiCategory {
     final b = bmi;
@@ -40,9 +41,15 @@ class UserProfile {
   }
 
   int? get currentCycleDay {
-    if (sex != 'Female' || !trackMenstrualCycle || lastPeriodStartDate == null) return null;
+    if (sex != 'Female' ||
+        !trackMenstrualCycle ||
+        lastPeriodStartDate == null) {
+      return null;
+    }
     final diff = DateTime.now().difference(lastPeriodStartDate!).inDays;
-    if (diff < 0) return 1;
+    if (diff < 0) {
+      return 1;
+    }
     return (diff % cycleLengthDays) + 1;
   }
 
@@ -103,4 +110,3 @@ class UserProfile {
     );
   }
 }
-

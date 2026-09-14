@@ -32,16 +32,24 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
   bool _trackMenstrualCycle = false;
   int _cycleLengthDays = 28;
   int _periodDurationDays = 5;
-  DateTime _lastPeriodStartDate = DateTime.now().subtract(const Duration(days: 7));
+  DateTime _lastPeriodStartDate = DateTime.now().subtract(
+    const Duration(days: 7),
+  );
 
   @override
   void initState() {
     super.initState();
     final existing = context.read<AdaptiveAppProvider>().userProfile;
     _nameController = TextEditingController(text: existing?.name ?? 'Sanjo');
-    _ageController = TextEditingController(text: (existing?.age ?? 22).toString());
-    _heightController = TextEditingController(text: (existing?.height ?? 175.0).toStringAsFixed(0));
-    _weightController = TextEditingController(text: (existing?.weight ?? 70.0).toStringAsFixed(0));
+    _ageController = TextEditingController(
+      text: (existing?.age ?? 22).toString(),
+    );
+    _heightController = TextEditingController(
+      text: (existing?.height ?? 175.0).toStringAsFixed(0),
+    );
+    _weightController = TextEditingController(
+      text: (existing?.weight ?? 70.0).toStringAsFixed(0),
+    );
 
     if (existing != null) {
       _sex = existing.sex;
@@ -80,7 +88,9 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
         trackMenstrualCycle: _sex == 'Female' && _trackMenstrualCycle,
         cycleLengthDays: _cycleLengthDays,
         periodDurationDays: _periodDurationDays,
-        lastPeriodStartDate: _sex == 'Female' && _trackMenstrualCycle ? _lastPeriodStartDate : null,
+        lastPeriodStartDate: _sex == 'Female' && _trackMenstrualCycle
+            ? _lastPeriodStartDate
+            : null,
       );
 
       context.read<AdaptiveAppProvider>().saveUserProfile(profile);
@@ -93,7 +103,9 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
     if (!mounted) return;
     ScaffoldMessenger.of(context).showSnackBar(
       const SnackBar(
-        content: Text('Date selection failed: Calendar module disabled in backend.'),
+        content: Text(
+          'Date selection failed: Calendar module disabled in backend.',
+        ),
         backgroundColor: Colors.redAccent,
       ),
     );
@@ -134,7 +146,11 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                         gradient: AppColors.brandGradient,
                         borderRadius: BorderRadius.circular(14),
                       ),
-                      child: const Icon(Icons.bolt_rounded, color: Colors.white, size: 24),
+                      child: const Icon(
+                        Icons.bolt_rounded,
+                        color: Colors.white,
+                        size: 24,
+                      ),
                     ),
                     const SizedBox(width: 12),
                     Text(
@@ -152,15 +168,17 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
 
                 Text(
                   'Set Up Your Profile',
-                  style: Theme.of(context).textTheme.headlineSmall?.copyWith(
-                        fontWeight: FontWeight.bold,
-                      ),
+                  style: Theme.of(context).textTheme.headlineSmall
+                      ?.copyWith(fontWeight: FontWeight.bold),
                 ).animate().fadeIn(delay: 100.ms),
 
                 const SizedBox(height: 6),
                 const Text(
                   'Your adaptive engine uses these parameters to tailor workout progression.',
-                  style: TextStyle(color: AppColors.textSecondary, fontSize: 14),
+                  style: TextStyle(
+                    color: AppColors.textSecondary,
+                    fontSize: 14,
+                  ),
                 ).animate().fadeIn(delay: 150.ms),
 
                 const SizedBox(height: 28),
@@ -172,7 +190,8 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                     labelText: 'Full Name',
                     prefixIcon: Icon(Icons.person_outline_rounded),
                   ),
-                  validator: (v) => v == null || v.trim().isEmpty ? 'Enter your name' : null,
+                  validator: (v) =>
+                      v == null || v.trim().isEmpty ? 'Enter your name' : null,
                 ).animate().fadeIn(delay: 200.ms),
 
                 const SizedBox(height: 16),
@@ -186,7 +205,9 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                   ),
                   validator: (v) {
                     final age = int.tryParse(v ?? '');
-                    if (age == null || age < 12 || age > 100) return 'Enter a valid age (12-100)';
+                    if (age == null || age < 12 || age > 100) {
+                      return 'Enter a valid age (12-100)';
+                    }
                     return null;
                   },
                 ).animate().fadeIn(delay: 250.ms),
@@ -209,8 +230,12 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                         }),
                         selectedColor: AppColors.primary,
                         labelStyle: TextStyle(
-                          color: _sex == 'Male' ? Colors.white : AppColors.textSecondary,
-                          fontWeight: _sex == 'Male' ? FontWeight.bold : FontWeight.normal,
+                          color: _sex == 'Male'
+                              ? Colors.white
+                              : AppColors.textSecondary,
+                          fontWeight: _sex == 'Male'
+                              ? FontWeight.bold
+                              : FontWeight.normal,
                         ),
                         backgroundColor: AppColors.surface,
                       ),
@@ -224,8 +249,12 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                         onSelected: (_) => setState(() => _sex = 'Female'),
                         selectedColor: AppColors.accent,
                         labelStyle: TextStyle(
-                          color: _sex == 'Female' ? Colors.white : AppColors.textSecondary,
-                          fontWeight: _sex == 'Female' ? FontWeight.bold : FontWeight.normal,
+                          color: _sex == 'Female'
+                              ? Colors.white
+                              : AppColors.textSecondary,
+                          fontWeight: _sex == 'Female'
+                              ? FontWeight.bold
+                              : FontWeight.normal,
                         ),
                         backgroundColor: AppColors.surface,
                       ),
@@ -243,7 +272,9 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                     Expanded(
                       child: TextFormField(
                         controller: _heightController,
-                        keyboardType: const TextInputType.numberWithOptions(decimal: true),
+                        keyboardType: const TextInputType.numberWithOptions(
+                          decimal: true,
+                        ),
                         decoration: const InputDecoration(
                           labelText: 'Height (cm)',
                           prefixIcon: Icon(Icons.height_rounded),
@@ -251,7 +282,9 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                         ),
                         validator: (v) {
                           final h = double.tryParse(v ?? '');
-                          if (h == null || h < 80 || h > 250) return '80 - 250 cm';
+                          if (h == null || h < 80 || h > 250) {
+                            return '80 - 250 cm';
+                          }
                           return null;
                         },
                       ),
@@ -260,7 +293,9 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                     Expanded(
                       child: TextFormField(
                         controller: _weightController,
-                        keyboardType: const TextInputType.numberWithOptions(decimal: true),
+                        keyboardType: const TextInputType.numberWithOptions(
+                          decimal: true,
+                        ),
                         decoration: const InputDecoration(
                           labelText: 'Weight (kg)',
                           prefixIcon: Icon(Icons.monitor_weight_outlined),
@@ -268,7 +303,9 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                         ),
                         validator: (v) {
                           final w = double.tryParse(v ?? '');
-                          if (w == null || w < 30 || w > 250) return '30 - 250 kg';
+                          if (w == null || w < 30 || w > 250) {
+                            return '30 - 250 kg';
+                          }
                           return null;
                         },
                       ),
@@ -283,7 +320,10 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                     decoration: BoxDecoration(
                       color: AppColors.surface,
                       borderRadius: BorderRadius.circular(16),
-                      border: Border.all(color: AppColors.accent.withAlpha(100), width: 1.5),
+                      border: Border.all(
+                        color: AppColors.accent.withAlpha(100),
+                        width: 1.5,
+                      ),
                     ),
                     padding: const EdgeInsets.all(16),
                     child: Column(
@@ -294,27 +334,53 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                           activeTrackColor: AppColors.accent,
                           title: const Row(
                             children: [
-                              Icon(Icons.water_drop_rounded, color: AppColors.accent, size: 20),
+                              Icon(
+                                Icons.water_drop_rounded,
+                                color: AppColors.accent,
+                                size: 20,
+                              ),
                               SizedBox(width: 8),
-                              Text('Track Menstrual Cycle', style: TextStyle(fontWeight: FontWeight.bold, fontSize: 15)),
+                              Text(
+                                'Track Menstrual Cycle',
+                                style: TextStyle(
+                                  fontWeight: FontWeight.bold,
+                                  fontSize: 15,
+                                ),
+                              ),
                             ],
                           ),
                           subtitle: const Text(
                             'Tailors readiness scores & progressive overload to hormonal cycle phases.',
-                            style: TextStyle(color: AppColors.textSecondary, fontSize: 12),
+                            style: TextStyle(
+                              color: AppColors.textSecondary,
+                              fontSize: 12,
+                            ),
                           ),
                           value: _trackMenstrualCycle,
-                          onChanged: (val) => setState(() => _trackMenstrualCycle = val),
+                          onChanged: (val) =>
+                              setState(() => _trackMenstrualCycle = val),
                         ),
                         if (_trackMenstrualCycle) ...[
-                          const Divider(color: AppColors.cardBorder, height: 24),
-                          const Text('Last Period Start Date', style: TextStyle(fontSize: 13, fontWeight: FontWeight.w600)),
+                          const Divider(
+                            color: AppColors.cardBorder,
+                            height: 24,
+                          ),
+                          const Text(
+                            'Last Period Start Date',
+                            style: TextStyle(
+                              fontSize: 13,
+                              fontWeight: FontWeight.w600,
+                            ),
+                          ),
                           const SizedBox(height: 8),
                           InkWell(
                             onTap: _selectLastPeriodDate,
                             borderRadius: BorderRadius.circular(12),
                             child: Container(
-                              padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+                              padding: const EdgeInsets.symmetric(
+                                horizontal: 16,
+                                vertical: 12,
+                              ),
                               decoration: BoxDecoration(
                                 color: AppColors.background,
                                 borderRadius: BorderRadius.circular(12),
@@ -322,14 +388,25 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                               ),
                               child: Row(
                                 children: [
-                                  const Icon(Icons.calendar_month_rounded, color: AppColors.accent, size: 20),
+                                  const Icon(
+                                    Icons.calendar_month_rounded,
+                                    color: AppColors.accent,
+                                    size: 20,
+                                  ),
                                   const SizedBox(width: 12),
                                   Text(
-                                    DateFormat('MMMM dd, yyyy').format(_lastPeriodStartDate),
-                                    style: const TextStyle(fontWeight: FontWeight.w600),
+                                    DateFormat('MMMM dd, yyyy')
+                                        .format(_lastPeriodStartDate),
+                                    style: const TextStyle(
+                                      fontWeight: FontWeight.w600,
+                                    ),
                                   ),
                                   const Spacer(),
-                                  const Icon(Icons.edit_calendar_rounded, color: AppColors.textSecondary, size: 18),
+                                  const Icon(
+                                    Icons.edit_calendar_rounded,
+                                    color: AppColors.textSecondary,
+                                    size: 18,
+                                  ),
                                 ],
                               ),
                             ),
@@ -338,8 +415,20 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                           Row(
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             children: [
-                              const Text('Average Cycle Length', style: TextStyle(fontSize: 13, fontWeight: FontWeight.w600)),
-                              Text('$_cycleLengthDays days', style: const TextStyle(color: AppColors.accent, fontWeight: FontWeight.bold)),
+                              const Text(
+                                'Average Cycle Length',
+                                style: TextStyle(
+                                  fontSize: 13,
+                                  fontWeight: FontWeight.w600,
+                                ),
+                              ),
+                              Text(
+                                '$_cycleLengthDays days',
+                                style: const TextStyle(
+                                  color: AppColors.accent,
+                                  fontWeight: FontWeight.bold,
+                                ),
+                              ),
                             ],
                           ),
                           Slider(
@@ -349,13 +438,26 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                             divisions: 19,
                             activeColor: AppColors.accent,
                             label: '$_cycleLengthDays days',
-                            onChanged: (v) => setState(() => _cycleLengthDays = v.round()),
+                            onChanged: (v) =>
+                                setState(() => _cycleLengthDays = v.round()),
                           ),
                           Row(
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             children: [
-                              const Text('Period Duration', style: TextStyle(fontSize: 13, fontWeight: FontWeight.w600)),
-                              Text('$_periodDurationDays days', style: const TextStyle(color: AppColors.accent, fontWeight: FontWeight.bold)),
+                              const Text(
+                                'Period Duration',
+                                style: TextStyle(
+                                  fontSize: 13,
+                                  fontWeight: FontWeight.w600,
+                                ),
+                              ),
+                              Text(
+                                '$_periodDurationDays days',
+                                style: const TextStyle(
+                                  color: AppColors.accent,
+                                  fontWeight: FontWeight.bold,
+                                ),
+                              ),
                             ],
                           ),
                           Slider(
@@ -365,7 +467,8 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                             divisions: 8,
                             activeColor: AppColors.accent,
                             label: '$_periodDurationDays days',
-                            onChanged: (v) => setState(() => _periodDurationDays = v.round()),
+                            onChanged: (v) =>
+                                setState(() => _periodDurationDays = v.round()),
                           ),
                           const SizedBox(height: 8),
                           Container(
@@ -376,12 +479,20 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                             ),
                             child: Row(
                               children: [
-                                const Icon(Icons.info_outline_rounded, color: AppColors.accent, size: 18),
+                                const Icon(
+                                  Icons.info_outline_rounded,
+                                  color: AppColors.accent,
+                                  size: 18,
+                                ),
                                 const SizedBox(width: 10),
                                 Expanded(
                                   child: Text(
                                     'Estimated: ${_calculatePreviewPhase()}',
-                                    style: const TextStyle(fontSize: 12, fontWeight: FontWeight.w500, color: Colors.white),
+                                    style: const TextStyle(
+                                      fontSize: 12,
+                                      fontWeight: FontWeight.w500,
+                                      color: Colors.white,
+                                    ),
                                   ),
                                 ),
                               ],
@@ -396,10 +507,14 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                 const SizedBox(height: 24),
 
                 // Fitness Level Selector
-                _buildSectionLabel('NEUROMUSCULAR ADAPTATION BASELINE & ATHLETIC TIER'),
+                _buildSectionLabel(
+                  'NEUROMUSCULAR ADAPTATION BASELINE & ATHLETIC TIER',
+                ),
                 const SizedBox(height: 10),
                 Row(
-                  children: ['Beginner', 'Intermediate', 'Advanced'].map((level) {
+                  children: ['Beginner', 'Intermediate', 'Advanced'].map((
+                    level,
+                  ) {
                     final isSelected = _fitnessLevel == level;
                     return Expanded(
                       child: Padding(
@@ -407,11 +522,16 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                         child: ChoiceChip(
                           label: Text(level),
                           selected: isSelected,
-                          onSelected: (_) => setState(() => _fitnessLevel = level),
+                          onSelected: (_) =>
+                              setState(() => _fitnessLevel = level),
                           selectedColor: AppColors.primary,
                           labelStyle: TextStyle(
-                            color: isSelected ? Colors.white : AppColors.textSecondary,
-                            fontWeight: isSelected ? FontWeight.bold : FontWeight.normal,
+                            color: isSelected
+                                ? Colors.white
+                                : AppColors.textSecondary,
+                            fontWeight: isSelected
+                                ? FontWeight.bold
+                                : FontWeight.normal,
                           ),
                           backgroundColor: AppColors.surface,
                         ),
@@ -423,10 +543,14 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                 const SizedBox(height: 24),
 
                 // Primary Goal Selector
-                _buildSectionLabel('PHYSIOLOGICAL SPECIFICITY & HYPERTROPHIC OBJECTIVE'),
+                _buildSectionLabel(
+                  'PHYSIOLOGICAL SPECIFICITY & HYPERTROPHIC OBJECTIVE',
+                ),
                 const SizedBox(height: 10),
                 Row(
-                  children: ['Strength', 'Muscle Gain', 'General Fitness'].map((goal) {
+                  children: ['Strength', 'Muscle Gain', 'General Fitness'].map((
+                    goal,
+                  ) {
                     final isSelected = _primaryGoal == goal;
                     return Expanded(
                       child: Padding(
@@ -434,11 +558,16 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                         child: ChoiceChip(
                           label: Text(goal, textAlign: TextAlign.center),
                           selected: isSelected,
-                          onSelected: (_) => setState(() => _primaryGoal = goal),
+                          onSelected: (_) =>
+                              setState(() => _primaryGoal = goal),
                           selectedColor: AppColors.primary,
                           labelStyle: TextStyle(
-                            color: isSelected ? Colors.white : AppColors.textSecondary,
-                            fontWeight: isSelected ? FontWeight.bold : FontWeight.normal,
+                            color: isSelected
+                                ? Colors.white
+                                : AppColors.textSecondary,
+                            fontWeight: isSelected
+                                ? FontWeight.bold
+                                : FontWeight.normal,
                             fontSize: 12,
                           ),
                           backgroundColor: AppColors.surface,
@@ -451,10 +580,14 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                 const SizedBox(height: 24),
 
                 // Frequency Selector
-                _buildSectionLabel('PERIODIZATION CHRONO-STIMULUS & WEEKLY DENSITY'),
+                _buildSectionLabel(
+                  'PERIODIZATION CHRONO-STIMULUS & WEEKLY DENSITY',
+                ),
                 const SizedBox(height: 10),
                 Row(
-                  children: ['3 days/week', '4 days/week', '5 days/week'].map((freq) {
+                  children: ['3 days/week', '4 days/week', '5 days/week'].map((
+                    freq,
+                  ) {
                     final isSelected = _frequency == freq;
                     return Expanded(
                       child: Padding(
@@ -465,8 +598,12 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                           onSelected: (_) => setState(() => _frequency = freq),
                           selectedColor: AppColors.primary,
                           labelStyle: TextStyle(
-                            color: isSelected ? Colors.white : AppColors.textSecondary,
-                            fontWeight: isSelected ? FontWeight.bold : FontWeight.normal,
+                            color: isSelected
+                                ? Colors.white
+                                : AppColors.textSecondary,
+                            fontWeight: isSelected
+                                ? FontWeight.bold
+                                : FontWeight.normal,
                             fontSize: 12,
                           ),
                           backgroundColor: AppColors.surface,
@@ -505,4 +642,3 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
     );
   }
 }
-

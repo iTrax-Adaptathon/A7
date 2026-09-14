@@ -1,14 +1,10 @@
-enum AdaptationType {
-  progress,
-  maintain,
-  regress,
-}
+enum AdaptationType { progress, maintain, regress }
 
 class AdaptationResult {
   final AdaptationType type;
-  final double readinessScore;   // 0.0 - 100.0
+  final double readinessScore; // 0.0 - 100.0
   final double performanceScore; // 0.0 - 100.0
-  final double confidence;       // 0.0 - 100.0
+  final double confidence; // 0.0 - 100.0
   final double recommendedWeight;
   final int recommendedReps;
   final int recommendedSets;

@@ -14,9 +14,7 @@ void main() async {
 
   runApp(
     MultiProvider(
-      providers: [
-        ChangeNotifierProvider.value(value: adaptiveProvider),
-      ],
+      providers: [ChangeNotifierProvider.value(value: adaptiveProvider)],
       child: const AdaptiveApp(),
     ),
   );

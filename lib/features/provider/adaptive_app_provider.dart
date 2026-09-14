@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+
 import '../../data/local/demo_data_seeder.dart';
 import '../../data/local/local_storage_service.dart';
 import '../../data/models/adaptation_result.dart';
@@ -17,6 +18,7 @@ class AdaptiveAppProvider extends ChangeNotifier {
   List<WorkoutSession> _workoutHistory = [];
   WorkoutSession? _activeWorkout;
   AdaptationResult? _latestAdaptation;
+  String? _lastError;
 
   UserProfile? get userProfile => _userProfile;
   bool get isInitialized => _isInitialized;
@@ -25,6 +27,7 @@ class AdaptiveAppProvider extends ChangeNotifier {
   List<WorkoutSession> get workoutHistory => _workoutHistory;
   WorkoutSession? get activeWorkout => _activeWorkout;
   AdaptationResult? get latestAdaptation => _latestAdaptation;
+  String? get lastError => _lastError;
 
   double get currentReadinessScore {
     if (_latestAdaptation != null) return _latestAdaptation!.readinessScore;
@@ -43,13 +46,18 @@ class AdaptiveAppProvider extends ChangeNotifier {
   }
 
   Future<void> initialize() async {
-    _isDemoMode = await LocalStorageService.getDemoMode();
-    _userProfile = await LocalStorageService.getUserProfile();
-    
-    if (_isDemoMode) {
-      _workoutHistory = DemoDataSeeder.getDemoSessions();
-    } else {
-      _workoutHistory = await LocalStorageService.getWorkoutHistory();
+    try {
+      _isDemoMode = await LocalStorageService.getDemoMode();
+      _userProfile = await LocalStorageService.getUserProfile();
+
+      if (_isDemoMode) {
+        _workoutHistory = DemoDataSeeder.getDemoSessions();
+      } else {
+        _workoutHistory = await LocalStorageService.getWorkoutHistory();
+      }
+    } catch (error) {
+      _lastError = 'Local data could not be loaded. You can continue with a fresh session.';
+      _workoutHistory = [];
     }
 
     _calculateLatestAdaptation();
@@ -58,18 +66,28 @@ class AdaptiveAppProvider extends ChangeNotifier {
   }
 
   Future<void> saveUserProfile(UserProfile profile) async {
-    _userProfile = profile;
-    await LocalStorageService.saveUserProfile(profile);
+    try {
+      await LocalStorageService.saveUserProfile(profile);
+      _userProfile = profile;
+      _lastError = null;
+    } catch (error) {
+      _lastError = 'Profile was not saved. Please try again.';
+    }
     notifyListeners();
   }
 
   Future<void> toggleDemoMode(bool value) async {
-    _isDemoMode = value;
-    await LocalStorageService.saveDemoMode(value);
-    if (_isDemoMode) {
-      _workoutHistory = DemoDataSeeder.getDemoSessions();
-    } else {
-      _workoutHistory = await LocalStorageService.getWorkoutHistory();
+    try {
+      await LocalStorageService.saveDemoMode(value);
+      _isDemoMode = value;
+      if (_isDemoMode) {
+        _workoutHistory = DemoDataSeeder.getDemoSessions();
+      } else {
+        _workoutHistory = await LocalStorageService.getWorkoutHistory();
+      }
+      _lastError = null;
+    } catch (error) {
+      _lastError = 'Demo mode could not be changed. Please try again.';
     }
     _calculateLatestAdaptation();
     notifyListeners();
@@ -77,7 +95,8 @@ class AdaptiveAppProvider extends ChangeNotifier {
 
   void startNewWorkout() {
     final nextExercises = NextWorkoutGenerator.generateNextSessionExercises(
-      adaptation: _latestAdaptation ??
+      adaptation:
+          _latestAdaptation ??
           AdaptationResult(
             type: AdaptationType.maintain,
             readinessScore: 78.0,
@@ -107,8 +126,21 @@ class AdaptiveAppProvider extends ChangeNotifier {
     notifyListeners();
   }
 
-  void updateSetRecord(String exerciseId, int setIndex, double actualWeight, int actualReps) {
-    if (_activeWorkout == null) return;
+  bool updateSetRecord(
+    String exerciseId,
+    int setIndex,
+    double actualWeight,
+    int actualReps,
+  ) {
+    if (_activeWorkout == null ||
+        !actualWeight.isFinite ||
+        actualWeight <= 0 ||
+        actualReps <= 0 ||
+        actualReps > 100) {
+      _lastError = 'Enter a weight greater than 0 kg and 1-100 repetitions.';
+      notifyListeners();
+      return false;
+    }
 
     final updatedExercises = _activeWorkout!.exerciseSessions.map((ex) {
       if (ex.exerciseId == exerciseId) {
@@ -141,11 +173,17 @@ class AdaptiveAppProvider extends ChangeNotifier {
       adaptationType: _activeWorkout!.adaptationType,
       adaptationExplanation: _activeWorkout!.adaptationExplanation,
     );
+    _lastError = null;
     notifyListeners();
+    return true;
   }
 
-  void setExerciseDifficulty(String exerciseId, int rating) {
-    if (_activeWorkout == null) return;
+  bool setExerciseDifficulty(String exerciseId, int rating) {
+    if (_activeWorkout == null || rating < 1 || rating > 5) {
+      _lastError = 'Choose a difficulty rating from 1 to 5.';
+      notifyListeners();
+      return false;
+    }
 
     final updatedExercises = _activeWorkout!.exerciseSessions.map((ex) {
       if (ex.exerciseId == exerciseId) {
@@ -170,10 +208,16 @@ class AdaptiveAppProvider extends ChangeNotifier {
       adaptationType: _activeWorkout!.adaptationType,
       adaptationExplanation: _activeWorkout!.adaptationExplanation,
     );
+    _lastError = null;
     notifyListeners();
+    return true;
   }
 
-  void submitRecoveryCheck(double sleepHours, int energyRating, String discomfortLevel) {
+  void submitRecoveryCheck(
+    double sleepHours,
+    int energyRating,
+    String discomfortLevel,
+  ) {
     if (_activeWorkout == null) return;
 
     final recovery = RecoveryRecord(
@@ -224,7 +268,12 @@ class AdaptiveAppProvider extends ChangeNotifier {
     _activeWorkout = null;
 
     if (!_isDemoMode) {
-      await LocalStorageService.saveWorkoutHistory(_workoutHistory);
+      try {
+        await LocalStorageService.saveWorkoutHistory(_workoutHistory);
+        _lastError = null;
+      } catch (error) {
+        _lastError = 'Workout completed, but it could not be saved locally.';
+      }
     }
     notifyListeners();
     return completedSession;
@@ -240,7 +289,9 @@ class AdaptiveAppProvider extends ChangeNotifier {
         recommendedWeight: 50.0,
         recommendedReps: 8,
         recommendedSets: 3,
-        reasons: ['No previous workout data available. Establishing personal baseline.'],
+        reasons: [
+          'No previous workout data available. Establishing personal baseline.',
+        ],
         statusTitle: '🟡 MAINTAIN CURRENT LOAD',
       );
       return;

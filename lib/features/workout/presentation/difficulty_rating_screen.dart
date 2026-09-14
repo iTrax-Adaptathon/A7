@@ -17,11 +17,36 @@ class _DifficultyRatingScreenState extends State<DifficultyRatingScreen> {
   int _selectedRating = 3; // Default Moderate
 
   final List<Map<String, dynamic>> _options = [
-    {'rating': 1, 'label': '1 — Very Easy', 'desc': 'Light load, felt like warmup', 'color': AppColors.progress},
-    {'rating': 2, 'label': '2 — Easy', 'desc': 'Controlled, 3+ reps left in tank', 'color': AppColors.progress},
-    {'rating': 3, 'label': '3 — Moderate', 'desc': 'Challenging but clean form', 'color': AppColors.maintain},
-    {'rating': 4, 'label': '4 — Hard', 'desc': 'Near max effort, 1 rep left', 'color': AppColors.maintain},
-    {'rating': 5, 'label': '5 — Extremely Hard', 'desc': 'Total muscle failure / strain', 'color': AppColors.regress},
+    {
+      'rating': 1,
+      'label': '1 — Very Easy',
+      'desc': 'Light load, felt like warmup',
+      'color': AppColors.progress,
+    },
+    {
+      'rating': 2,
+      'label': '2 — Easy',
+      'desc': 'Controlled, 3+ reps left in tank',
+      'color': AppColors.progress,
+    },
+    {
+      'rating': 3,
+      'label': '3 — Moderate',
+      'desc': 'Challenging but clean form',
+      'color': AppColors.maintain,
+    },
+    {
+      'rating': 4,
+      'label': '4 — Hard',
+      'desc': 'Near max effort, 1 rep left',
+      'color': AppColors.maintain,
+    },
+    {
+      'rating': 5,
+      'label': '5 — Extremely Hard',
+      'desc': 'Total muscle failure / strain',
+      'color': AppColors.regress,
+    },
   ];
 
   @override
@@ -46,9 +71,8 @@ class _DifficultyRatingScreenState extends State<DifficultyRatingScreen> {
             children: [
               Text(
                 'How did that feel?',
-                style: Theme.of(context).textTheme.headlineSmall?.copyWith(
-                      fontWeight: FontWeight.bold,
-                    ),
+                style: Theme.of(context).textTheme.headlineSmall
+                    ?.copyWith(fontWeight: FontWeight.bold),
               ).animate().fadeIn(),
 
               const SizedBox(height: 6),
@@ -79,7 +103,9 @@ class _DifficultyRatingScreenState extends State<DifficultyRatingScreen> {
                     child: Container(
                       padding: const EdgeInsets.all(18),
                       decoration: BoxDecoration(
-                        color: isSelected ? color.withAlpha(25) : AppColors.cardBg,
+                        color: isSelected
+                            ? color.withAlpha(25)
+                            : AppColors.cardBg,
                         borderRadius: BorderRadius.circular(16),
                         border: Border.all(
                           color: isSelected ? color : AppColors.cardBorder,
@@ -112,13 +138,18 @@ class _DifficultyRatingScreenState extends State<DifficultyRatingScreen> {
                                   style: TextStyle(
                                     fontSize: 16,
                                     fontWeight: FontWeight.bold,
-                                    color: isSelected ? color : AppColors.textPrimary,
+                                    color: isSelected
+                                        ? color
+                                        : AppColors.textPrimary,
                                   ),
                                 ),
                                 const SizedBox(height: 2),
                                 Text(
                                   opt['desc'] as String,
-                                  style: const TextStyle(fontSize: 12, color: AppColors.textSecondary),
+                                  style: const TextStyle(
+                                    fontSize: 12,
+                                    color: AppColors.textSecondary,
+                                  ),
                                 ),
                               ],
                             ),
@@ -129,7 +160,9 @@ class _DifficultyRatingScreenState extends State<DifficultyRatingScreen> {
                       ),
                     ),
                   ),
-                ).animate().fadeIn(delay: Duration(milliseconds: 150 + (rating * 50)));
+                ).animate().fadeIn(
+                  delay: Duration(milliseconds: 150 + (rating * 50)),
+                );
               }),
 
               const SizedBox(height: 32),

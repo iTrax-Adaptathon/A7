@@ -10,13 +10,13 @@ class AppColors {
   // Status & Decision Colors
   static const Color progress = Color(0xFF10B981); // 🟢 Emerald Neon
   static const Color maintain = Color(0xFFF59E0B); // 🟡 Amber Gold
-  static const Color regress = Color(0xFFF43F5E);  // 🔴 Rose Red
+  static const Color regress = Color(0xFFF43F5E); // 🔴 Rose Red
   static const Color recovery = Color(0xFF3B82F6); // 🔵 Electric Blue
 
   // Brand Accents
-  static const Color primary = Color(0xFF6366F1);   // Indigo
+  static const Color primary = Color(0xFF6366F1); // Indigo
   static const Color secondary = Color(0xFF8B5CF6); // Violet
-  static const Color accent = Color(0xFF06B6D4);    // Cyan
+  static const Color accent = Color(0xFF06B6D4); // Cyan
 
   // Typography
   static const Color textPrimary = Color(0xFFF8FAFC);

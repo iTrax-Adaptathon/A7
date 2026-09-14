@@ -37,7 +37,11 @@ class DashboardScreen extends StatelessWidget {
                 gradient: AppColors.brandGradient,
                 borderRadius: BorderRadius.circular(12),
               ),
-              child: const Icon(Icons.bolt_rounded, color: Colors.white, size: 20),
+              child: const Icon(
+                Icons.bolt_rounded,
+                color: Colors.white,
+                size: 20,
+              ),
             ),
             const SizedBox(width: 10),
             const Text(AppConstants.appName),
@@ -59,19 +63,19 @@ class DashboardScreen extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               // Judge Demo Banner
-              _buildDemoBanner(context, provider, isDemo)
-                  .animate()
-                  .fadeIn()
-                  .slideY(begin: -0.1, end: 0),
+              _buildDemoBanner(
+                context,
+                provider,
+                isDemo,
+              ).animate().fadeIn().slideY(begin: -0.1, end: 0),
 
               const SizedBox(height: 16),
 
               // Header Greeting
               Text(
                 '${_getGreeting()}, $userName',
-                style: Theme.of(context).textTheme.headlineSmall?.copyWith(
-                      fontWeight: FontWeight.w800,
-                    ),
+                style: Theme.of(context).textTheme.headlineSmall
+                    ?.copyWith(fontWeight: FontWeight.w800),
               ).animate().fadeIn(delay: 100.ms),
 
               const SizedBox(height: 4),
@@ -83,25 +87,27 @@ class DashboardScreen extends StatelessWidget {
               const SizedBox(height: 24),
 
               // Readiness Gauge Card
-              _buildReadinessCard(context, readiness, statusTitle)
-                  .animate()
-                  .fadeIn(delay: 200.ms)
-                  .slideY(begin: 0.05, end: 0),
+              _buildReadinessCard(
+                context,
+                readiness,
+                statusTitle,
+              ).animate().fadeIn(delay: 200.ms).slideY(begin: 0.05, end: 0),
 
               const SizedBox(height: 20),
 
               // Today's Workout Card
-              _buildTodaysWorkoutCard(context, provider)
-                  .animate()
-                  .fadeIn(delay: 300.ms)
-                  .slideY(begin: 0.05, end: 0),
+              _buildTodaysWorkoutCard(
+                context,
+                provider,
+              ).animate().fadeIn(delay: 300.ms).slideY(begin: 0.05, end: 0),
 
               const SizedBox(height: 20),
 
               // Adaptive Status Indicator Explanation
-              _buildAdaptiveStatusCard(context, statusTitle)
-                  .animate()
-                  .fadeIn(delay: 400.ms),
+              _buildAdaptiveStatusCard(
+                context,
+                statusTitle,
+              ).animate().fadeIn(delay: 400.ms),
             ],
           ),
         ),
@@ -110,7 +116,10 @@ class DashboardScreen extends StatelessWidget {
   }
 
   Widget _buildDemoBanner(
-      BuildContext context, AdaptiveAppProvider provider, bool isDemo) {
+    BuildContext context,
+    AdaptiveAppProvider provider,
+    bool isDemo,
+  ) {
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
       decoration: BoxDecoration(
@@ -133,7 +142,9 @@ class DashboardScreen extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
-                  isDemo ? 'COMPETITION DEMO MODE (ACTIVE)' : 'Demo Mode (Judge Testing)',
+                  isDemo
+                      ? 'COMPETITION DEMO MODE (ACTIVE)'
+                      : 'Demo Mode (Judge Testing)',
                   style: TextStyle(
                     fontSize: 13,
                     fontWeight: FontWeight.bold,
@@ -144,7 +155,10 @@ class DashboardScreen extends StatelessWidget {
                   isDemo
                       ? 'Loaded historical session progression for live judging.'
                       : 'Toggle to seed historical sessions demonstrating adaptive transitions.',
-                  style: const TextStyle(fontSize: 11, color: AppColors.textSecondary),
+                  style: const TextStyle(
+                    fontSize: 11,
+                    color: AppColors.textSecondary,
+                  ),
                 ),
               ],
             ),
@@ -160,7 +174,10 @@ class DashboardScreen extends StatelessWidget {
   }
 
   Widget _buildReadinessCard(
-      BuildContext context, double score, String statusTitle) {
+    BuildContext context,
+    double score,
+    String statusTitle,
+  ) {
     Color badgeColor = AppColors.maintain;
     if (statusTitle.contains('PROGRESS')) {
       badgeColor = AppColors.progress;
@@ -227,7 +244,10 @@ class DashboardScreen extends StatelessWidget {
                   ),
                   const SizedBox(height: 6),
                   Container(
-                    padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: 10,
+                      vertical: 5,
+                    ),
                     decoration: BoxDecoration(
                       color: badgeColor.withAlpha(30),
                       borderRadius: BorderRadius.circular(10),
@@ -245,7 +265,10 @@ class DashboardScreen extends StatelessWidget {
                   const SizedBox(height: 8),
                   const Text(
                     'Generated continuously from load response, recovery & performance trends.',
-                    style: TextStyle(fontSize: 11, color: AppColors.textSecondary),
+                    style: TextStyle(
+                      fontSize: 11,
+                      color: AppColors.textSecondary,
+                    ),
                   ),
                 ],
               ),
@@ -257,7 +280,9 @@ class DashboardScreen extends StatelessWidget {
   }
 
   Widget _buildTodaysWorkoutCard(
-      BuildContext context, AdaptiveAppProvider provider) {
+    BuildContext context,
+    AdaptiveAppProvider provider,
+  ) {
     final adaptation = provider.latestAdaptation;
     final recWeight = adaptation?.recommendedWeight ?? 50.0;
     final recReps = adaptation?.recommendedReps ?? 8;
@@ -283,14 +308,20 @@ class DashboardScreen extends StatelessWidget {
                   ),
                 ),
                 Container(
-                  padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 10,
+                    vertical: 4,
+                  ),
                   decoration: BoxDecoration(
                     color: AppColors.cardBg,
                     borderRadius: BorderRadius.circular(8),
                   ),
                   child: const Text(
                     'Session 08 • Upper Body',
-                    style: TextStyle(fontSize: 11, color: AppColors.textSecondary),
+                    style: TextStyle(
+                      fontSize: 11,
+                      color: AppColors.textSecondary,
+                    ),
                   ),
                 ),
               ],
@@ -299,7 +330,11 @@ class DashboardScreen extends StatelessWidget {
             const SizedBox(height: 16),
 
             // Target Exercise Presets
-            _buildExercisePreviewRow('Bench Press', '$recSets × $recReps', '${recWeight.toStringAsFixed(1)} kg'),
+            _buildExercisePreviewRow(
+              'Bench Press',
+              '$recSets × $recReps',
+              '${recWeight.toStringAsFixed(1)} kg',
+            ),
             const Divider(height: 20, color: AppColors.cardBorder),
             _buildExercisePreviewRow('Lat Pulldown', '3 × 10', '45.0 kg'),
             const Divider(height: 20, color: AppColors.cardBorder),
@@ -333,15 +368,31 @@ class DashboardScreen extends StatelessWidget {
             color: AppColors.cardBg,
             borderRadius: BorderRadius.circular(10),
           ),
-          child: const Icon(Icons.fitness_center_rounded, color: AppColors.primary, size: 18),
+          child: const Icon(
+            Icons.fitness_center_rounded,
+            color: AppColors.primary,
+            size: 18,
+          ),
         ),
         const SizedBox(width: 14),
         Expanded(
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Text(name, style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 15)),
-              Text(setsReps, style: const TextStyle(fontSize: 12, color: AppColors.textSecondary)),
+              Text(
+                name,
+                style: const TextStyle(
+                  fontWeight: FontWeight.bold,
+                  fontSize: 15,
+                ),
+              ),
+              Text(
+                setsReps,
+                style: const TextStyle(
+                  fontSize: 12,
+                  color: AppColors.textSecondary,
+                ),
+              ),
             ],
           ),
         ),
@@ -358,7 +409,8 @@ class DashboardScreen extends StatelessWidget {
   }
 
   Widget _buildAdaptiveStatusCard(BuildContext context, String statusTitle) {
-    String desc = 'The user is performing adequately but should maintain load to consolidate strength.';
+    String desc =
+        'The user is performing adequately but should maintain load to consolidate strength.';
     if (statusTitle.contains('PROGRESS')) {
       desc = 'The user is responding exceptionally well to recent training. Adaptive engine has increased training load.';
     } else if (statusTitle.contains('RECOVERY')) {
@@ -375,7 +427,11 @@ class DashboardScreen extends StatelessWidget {
       child: Row(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          const Icon(Icons.psychology_rounded, color: AppColors.primary, size: 24),
+          const Icon(
+            Icons.psychology_rounded,
+            color: AppColors.primary,
+            size: 24,
+          ),
           const SizedBox(width: 14),
           Expanded(
             child: Column(
@@ -383,13 +439,14 @@ class DashboardScreen extends StatelessWidget {
               children: [
                 const Text(
                   'ADAPTIVE ENGINE STATUS',
-                  style: TextStyle(fontSize: 11, fontWeight: FontWeight.bold, color: AppColors.textSecondary),
+                  style: TextStyle(
+                    fontSize: 11,
+                    fontWeight: FontWeight.bold,
+                    color: AppColors.textSecondary,
+                  ),
                 ),
                 const SizedBox(height: 4),
-                Text(
-                  desc,
-                  style: const TextStyle(fontSize: 13, height: 1.4),
-                ),
+                Text(desc, style: const TextStyle(fontSize: 13, height: 1.4)),
               ],
             ),
           ),

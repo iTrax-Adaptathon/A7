@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+
 import '../../../core/theme/app_colors.dart';
 import '../../dashboard/presentation/dashboard_screen.dart';
 import '../../history/presentation/history_screen.dart';
@@ -35,10 +36,7 @@ class _MainNavigationShellState extends State<MainNavigationShell> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: AppColors.background,
-      body: IndexedStack(
-        index: _currentIndex,
-        children: _screens,
-      ),
+      body: IndexedStack(index: _currentIndex, children: _screens),
       bottomNavigationBar: NavigationBar(
         selectedIndex: _currentIndex,
         onDestinationSelected: (index) {
@@ -56,17 +54,26 @@ class _MainNavigationShellState extends State<MainNavigationShell> {
           ),
           NavigationDestination(
             icon: Icon(Icons.fitness_center_outlined),
-            selectedIcon: Icon(Icons.fitness_center_rounded, color: AppColors.primary),
+            selectedIcon: Icon(
+              Icons.fitness_center_rounded,
+              color: AppColors.primary,
+            ),
             label: 'WORKOUT',
           ),
           NavigationDestination(
             icon: Icon(Icons.history_rounded),
-            selectedIcon: Icon(Icons.history_toggle_off_rounded, color: AppColors.primary),
+            selectedIcon: Icon(
+              Icons.history_toggle_off_rounded,
+              color: AppColors.primary,
+            ),
             label: 'HISTORY',
           ),
           NavigationDestination(
             icon: Icon(Icons.show_chart_rounded),
-            selectedIcon: Icon(Icons.show_chart_rounded, color: AppColors.primary),
+            selectedIcon: Icon(
+              Icons.show_chart_rounded,
+              color: AppColors.primary,
+            ),
             label: 'PROGRESS',
           ),
           NavigationDestination(

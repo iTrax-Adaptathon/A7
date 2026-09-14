@@ -51,9 +51,8 @@ class _RecoveryCheckScreenState extends State<RecoveryCheckScreen> {
             children: [
               Text(
                 'Recovery & Fatigue Signals',
-                style: Theme.of(context).textTheme.headlineSmall?.copyWith(
-                      fontWeight: FontWeight.bold,
-                    ),
+                style: Theme.of(context).textTheme.headlineSmall
+                    ?.copyWith(fontWeight: FontWeight.bold),
               ).animate().fadeIn(),
 
               const SizedBox(height: 6),
@@ -76,14 +75,27 @@ class _RecoveryCheckScreenState extends State<RecoveryCheckScreen> {
                         children: [
                           const Row(
                             children: [
-                              Icon(Icons.bedtime_rounded, color: AppColors.primary),
+                              Icon(
+                                Icons.bedtime_rounded,
+                                color: AppColors.primary,
+                              ),
                               SizedBox(width: 10),
-                              Text('Hours Slept Last Night', style: TextStyle(fontWeight: FontWeight.bold, fontSize: 15)),
+                              Text(
+                                'Hours Slept Last Night',
+                                style: TextStyle(
+                                  fontWeight: FontWeight.bold,
+                                  fontSize: 15,
+                                ),
+                              ),
                             ],
                           ),
                           Text(
                             '${_sleepHours.toStringAsFixed(1)} h',
-                            style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: AppColors.progress),
+                            style: const TextStyle(
+                              fontSize: 18,
+                              fontWeight: FontWeight.bold,
+                              color: AppColors.progress,
+                            ),
                           ),
                         ],
                       ),
@@ -114,7 +126,13 @@ class _RecoveryCheckScreenState extends State<RecoveryCheckScreen> {
                         children: [
                           Icon(Icons.bolt_rounded, color: AppColors.maintain),
                           SizedBox(width: 10),
-                          Text('Perceived Energy Level', style: TextStyle(fontWeight: FontWeight.bold, fontSize: 15)),
+                          Text(
+                            'Perceived Energy Level',
+                            style: TextStyle(
+                              fontWeight: FontWeight.bold,
+                              fontSize: 15,
+                            ),
+                          ),
                         ],
                       ),
                       const SizedBox(height: 14),
@@ -123,14 +141,19 @@ class _RecoveryCheckScreenState extends State<RecoveryCheckScreen> {
                           final isSelected = _energyRating == level;
                           return Expanded(
                             child: Padding(
-                              padding: const EdgeInsets.symmetric(horizontal: 4),
+                              padding: const EdgeInsets.symmetric(
+                                horizontal: 4,
+                              ),
                               child: ChoiceChip(
                                 label: Text('$level'),
                                 selected: isSelected,
-                                onSelected: (_) => setState(() => _energyRating = level),
+                                onSelected: (_) =>
+                                    setState(() => _energyRating = level),
                                 selectedColor: AppColors.maintain,
                                 labelStyle: TextStyle(
-                                  color: isSelected ? Colors.black : Colors.white,
+                                  color: isSelected
+                                      ? Colors.black
+                                      : Colors.white,
                                   fontWeight: FontWeight.bold,
                                 ),
                                 backgroundColor: AppColors.surface,
@@ -157,13 +180,22 @@ class _RecoveryCheckScreenState extends State<RecoveryCheckScreen> {
                         children: [
                           Icon(Icons.healing_rounded, color: AppColors.regress),
                           SizedBox(width: 10),
-                          Text('Joint / Muscle Discomfort', style: TextStyle(fontWeight: FontWeight.bold, fontSize: 15)),
+                          Text(
+                            'Joint / Muscle Discomfort',
+                            style: TextStyle(
+                              fontWeight: FontWeight.bold,
+                              fontSize: 15,
+                            ),
+                          ),
                         ],
                       ),
                       const SizedBox(height: 8),
                       const Text(
                         'Training signal for load management (not medical advice).',
-                        style: TextStyle(fontSize: 11, color: AppColors.textSecondary),
+                        style: TextStyle(
+                          fontSize: 11,
+                          color: AppColors.textSecondary,
+                        ),
                       ),
                       const SizedBox(height: 14),
                       Row(
@@ -171,15 +203,24 @@ class _RecoveryCheckScreenState extends State<RecoveryCheckScreen> {
                           final isSelected = _discomfortLevel == disc;
                           return Expanded(
                             child: Padding(
-                              padding: const EdgeInsets.symmetric(horizontal: 4),
+                              padding: const EdgeInsets.symmetric(
+                                horizontal: 4,
+                              ),
                               child: ChoiceChip(
                                 label: Text(disc, textAlign: TextAlign.center),
                                 selected: isSelected,
-                                onSelected: (_) => setState(() => _discomfortLevel = disc),
-                                selectedColor: disc == 'Significant' ? AppColors.regress : AppColors.primary,
+                                onSelected: (_) =>
+                                    setState(() => _discomfortLevel = disc),
+                                selectedColor: disc == 'Significant'
+                                    ? AppColors.regress
+                                    : AppColors.primary,
                                 labelStyle: TextStyle(
-                                  color: isSelected ? Colors.white : AppColors.textSecondary,
-                                  fontWeight: isSelected ? FontWeight.bold : FontWeight.normal,
+                                  color: isSelected
+                                      ? Colors.white
+                                      : AppColors.textSecondary,
+                                  fontWeight: isSelected
+                                      ? FontWeight.bold
+                                      : FontWeight.normal,
                                   fontSize: 12,
                                 ),
                                 backgroundColor: AppColors.surface,
@@ -200,9 +241,20 @@ class _RecoveryCheckScreenState extends State<RecoveryCheckScreen> {
                 child: ElevatedButton.icon(
                   onPressed: _isProcessing ? null : _submit,
                   icon: _isProcessing
-                      ? const SizedBox(width: 20, height: 20, child: CircularProgressIndicator(strokeWidth: 2, color: Colors.white))
+                      ? const SizedBox(
+                          width: 20,
+                          height: 20,
+                          child: CircularProgressIndicator(
+                            strokeWidth: 2,
+                            color: Colors.white,
+                          ),
+                        )
                       : const Icon(Icons.auto_awesome_rounded),
-                  label: Text(_isProcessing ? 'RUNNING ADAPTIVE ENGINE...' : 'RUN ADAPTIVE ENGINE'),
+                  label: Text(
+                    _isProcessing
+                        ? 'RUNNING ADAPTIVE ENGINE...'
+                        : 'RUN ADAPTIVE ENGINE',
+                  ),
                 ),
               ).animate().fadeIn(delay: 500.ms),
             ],

@@ -8,8 +8,8 @@ class WorkoutSession {
   final List<ExerciseSession> exerciseSessions;
   final RecoveryRecord? recoveryRecord;
   final double performanceScore; // 0 - 100
-  final double readinessScore;   // 0 - 100
-  final String adaptationType;   // progress, maintain, regress
+  final double readinessScore; // 0 - 100
+  final String adaptationType; // progress, maintain, regress
   final String adaptationExplanation;
 
   WorkoutSession({
@@ -47,7 +47,9 @@ class WorkoutSession {
           .map((e) => ExerciseSession.fromJson(e as Map<String, dynamic>))
           .toList(),
       recoveryRecord: json['recoveryRecord'] != null
-          ? RecoveryRecord.fromJson(json['recoveryRecord'] as Map<String, dynamic>)
+          ? RecoveryRecord.fromJson(
+              json['recoveryRecord'] as Map<String, dynamic>,
+            )
           : null,
       performanceScore: (json['performanceScore'] as num?)?.toDouble() ?? 80.0,
       readinessScore: (json['readinessScore'] as num?)?.toDouble() ?? 78.0,
