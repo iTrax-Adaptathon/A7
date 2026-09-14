@@ -1,6 +1,7 @@
 import 'package:adaptathon/data/models/adaptation_result.dart';
 import 'package:adaptathon/data/models/exercise_session.dart';
 import 'package:adaptathon/data/models/set_record.dart';
+import 'package:adaptathon/data/models/workout_session.dart';
 import 'package:adaptathon/domain/generators/next_workout_generator.dart';
 import 'package:flutter_test/flutter_test.dart';
 
@@ -56,21 +57,71 @@ void main() {
       expect(next[1].sets.first.targetWeight, 95);
     },
   );
+
+  test('exercise trend confirms progress independently for each lift', () {
+    final history = [
+      _workout('newest', 8, 4),
+      _workout('middle', 6, 6),
+      _workout('oldest', 4, 8),
+    ];
+    final next = NextWorkoutGenerator.generateNextSessionExercises(
+      adaptation: _progressAdaptation(),
+      previousSessions: [
+        _session('ex-bench-press', 'Bench Press', 100),
+        _session('ex-squat', 'Squat', 100),
+      ],
+      history: history,
+    );
+
+    expect(next[0].sets.first.targetWeight, 105);
+    expect(next[1].sets.first.targetWeight, 100);
+  });
 }
 
-ExerciseSession _session(String id, String name, double weight) =>
-    ExerciseSession(
-      exerciseId: id,
-      exerciseName: name,
-      difficultyRating: 3,
-      sets: [
-        SetRecord(
-          setNumber: 1,
-          targetWeight: weight,
-          actualWeight: weight,
-          targetReps: 8,
-          actualReps: 8,
-          completed: true,
-        ),
+AdaptationResult _progressAdaptation() => AdaptationResult(
+  type: AdaptationType.progress,
+  readinessScore: 85,
+  performanceScore: 90,
+  confidence: 80,
+  recommendedWeight: 0,
+  recommendedReps: 8,
+  recommendedSets: 3,
+  reasons: const [],
+  statusTitle: 'Progress',
+);
+
+WorkoutSession _workout(String id, int benchReps, int squatReps) =>
+    WorkoutSession(
+      id: id,
+      title: 'History',
+      timestamp: DateTime.now(),
+      exerciseSessions: [
+        _session('ex-bench-press', 'Bench Press', 100, reps: benchReps),
+        _session('ex-squat', 'Squat', 100, reps: squatReps),
       ],
+      performanceScore: 70,
+      readinessScore: 70,
+      adaptationType: 'maintain',
+      adaptationExplanation: '',
     );
+
+ExerciseSession _session(
+  String id,
+  String name,
+  double weight, {
+  int reps = 8,
+}) => ExerciseSession(
+  exerciseId: id,
+  exerciseName: name,
+  difficultyRating: 3,
+  sets: [
+    SetRecord(
+      setNumber: 1,
+      targetWeight: weight,
+      actualWeight: weight,
+      targetReps: 8,
+      actualReps: reps,
+      completed: true,
+    ),
+  ],
+);

@@ -34,12 +34,13 @@ class AdaptationResult {
   });
 
   AdaptationResult copyWith({
+    AdaptationType? type,
     bool? suggestDeload,
     List<String>? reasons,
     String? statusTitle,
   }) {
     return AdaptationResult(
-      type: type,
+      type: type ?? this.type,
       readinessScore: readinessScore,
       performanceScore: performanceScore,
       confidence: confidence,

@@ -47,6 +47,7 @@ class AdaptiveAppProvider extends ChangeNotifier {
         previousSessions: _workoutHistory.isNotEmpty
             ? _workoutHistory.first.exerciseSessions
             : const [],
+        history: _workoutHistory,
       );
 
   double get currentReadinessScore {
@@ -133,6 +134,7 @@ class AdaptiveAppProvider extends ChangeNotifier {
       previousSessions: _workoutHistory.isNotEmpty
           ? _workoutHistory.first.exerciseSessions
           : [],
+      history: _workoutHistory,
     );
 
     _activeWorkout = WorkoutSession(

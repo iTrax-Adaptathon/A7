@@ -2,6 +2,8 @@ import '../../data/models/adaptation_result.dart';
 import '../../data/models/exercise.dart';
 import '../../data/models/exercise_session.dart';
 import '../../data/models/set_record.dart';
+import '../../data/models/workout_session.dart';
+import '../analyzers/trend_analyzer.dart';
 
 class NextWorkoutGenerator {
   static List<Exercise> get defaultExerciseLibrary => [
@@ -119,6 +121,7 @@ class NextWorkoutGenerator {
   static List<ExerciseSession> generateNextSessionExercises({
     required AdaptationResult adaptation,
     required List<ExerciseSession> previousSessions,
+    List<WorkoutSession> history = const [],
   }) {
     if (previousSessions.isEmpty) {
       // Baseline default session
@@ -134,17 +137,22 @@ class NextWorkoutGenerator {
     for (final prevSession in previousSessions) {
       if (prevSession.sets.isEmpty) continue;
       final SetRecord referenceSet = prevSession.sets.first;
+      final exerciseAdaptation = _adaptationForExercise(
+        adaptation: adaptation,
+        exerciseId: prevSession.exerciseId,
+        history: history,
+      );
       final double targetW = _recommendedWeightForExercise(
         exerciseId: prevSession.exerciseId,
         currentWeight: referenceSet.actualWeight,
-        adaptation: adaptation,
+        adaptation: exerciseAdaptation,
       );
-      final int targetR = adaptation.type == AdaptationType.maintain
+      final int targetR = exerciseAdaptation.type == AdaptationType.maintain
           ? referenceSet.targetReps
-          : adaptation.recommendedReps;
-      final int targetS = adaptation.type == AdaptationType.maintain
+          : exerciseAdaptation.recommendedReps;
+      final int targetS = exerciseAdaptation.type == AdaptationType.maintain
           ? prevSession.sets.length
-          : adaptation.recommendedSets;
+          : exerciseAdaptation.recommendedSets;
 
       nextSessions.add(
         _createSession(
@@ -158,6 +166,29 @@ class NextWorkoutGenerator {
     }
 
     return nextSessions;
+  }
+
+  static AdaptationResult _adaptationForExercise({
+    required AdaptationResult adaptation,
+    required String exerciseId,
+    required List<WorkoutSession> history,
+  }) {
+    // Scoped design: readiness/recovery remains session-wide because sleep,
+    // energy, and discomfort cannot be meaningfully split by lift. A lift's
+    // own trend only confirms whether its load should follow that verdict.
+    // No lift history means there is nothing to confirm yet, so preserve the
+    // session recommendation during baseline training.
+    if (history.isEmpty) return adaptation;
+    final trend = TrendAnalyzer.analyzeForExercise(exerciseId, history);
+    final agrees =
+        adaptation.type == AdaptationType.maintain ||
+        (adaptation.type == AdaptationType.progress &&
+            trend.direction == TrendDirection.improving) ||
+        (adaptation.type == AdaptationType.regress &&
+            trend.direction == TrendDirection.declining);
+    return agrees
+        ? adaptation
+        : adaptation.copyWith(type: AdaptationType.maintain);
   }
 
   static double _recommendedWeightForExercise({
