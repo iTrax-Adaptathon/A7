@@ -73,16 +73,41 @@ class AdaptiveEngine {
     }
 
     // 5. Execute Strategy
-    return strategy.computeAdjustment(
+    final result = strategy.computeAdjustment(
       readinessScore: readinessEval.readinessScore,
       performanceScore: perfScore,
       confidence: readinessEval.confidence,
+      recoveryScore: recScore,
+      trendSlope: trend.slope,
+      trendDirection: trend.direction.name,
       currentWeight: currentWeight,
       currentReps: currentReps,
       currentSets: currentSets,
       baseFactors: readinessEval.factors,
       signals: signals,
     );
+    if (_shouldSuggestDeload(history)) {
+      return result.copyWith(
+        suggestDeload: true,
+        statusTitle: '🟣 DELOAD SUGGESTED',
+        reasons: [
+          ...result.reasons,
+          'Three consecutive maintenance sessions without improved readiness suggest a deload week.',
+          'Reduce next-session exercise loads by 20% or add an extra rest day.',
+        ],
+      );
+    }
+    return result;
+  }
+
+  static bool _shouldSuggestDeload(List<WorkoutSession> history) {
+    if (history.length < 3) return false;
+    final recent = history.take(3).toList();
+    final allMaintained = recent.every(
+      (session) => session.adaptationType == 'maintain',
+    );
+    if (!allMaintained) return false;
+    return recent.first.readinessScore <= recent.last.readinessScore;
   }
 
   /// Chooses an adjustment only when the current signal agrees with the

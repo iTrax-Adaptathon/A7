@@ -138,6 +138,38 @@ void main() {
   });
 
   group('AdaptiveEngine signals', () {
+    test('three consecutive maintains without readiness improvement suggest a deload', () {
+      final history = List.generate(
+        3,
+        (index) => _maintainSession(index, 68 + index.toDouble()),
+      );
+      final result = AdaptiveEngine.process(
+        exerciseSessions: [_exercise(actualReps: 8, difficulty: 3)],
+        recovery: RecoveryRecord(
+          sleepHours: 7.5,
+          energyRating: 4,
+          discomfortLevel: 'None',
+        ),
+        history: history,
+      );
+      expect(result.suggestDeload, isTrue);
+      expect(result.statusTitle, '🟣 DELOAD SUGGESTED');
+    });
+
+    test('two consecutive maintains do not suggest a deload', () {
+      final history = List.generate(2, (index) => _maintainSession(index, 70));
+      final result = AdaptiveEngine.process(
+        exerciseSessions: [_exercise(actualReps: 8, difficulty: 3)],
+        recovery: RecoveryRecord(
+          sleepHours: 7.5,
+          energyRating: 4,
+          discomfortLevel: 'None',
+        ),
+        history: history,
+      );
+      expect(result.suggestDeload, isFalse);
+    });
+
     test('least-squares trend treats zigzag performance as stable', () {
       final history = [80.0, 60.0, 80.0, 60.0, 80.0]
           .asMap()
@@ -257,6 +289,17 @@ WorkoutSession _historySession(int index) => WorkoutSession(
   exerciseSessions: [_exercise(actualReps: 8, difficulty: 3)],
   performanceScore: 80,
   readinessScore: 80,
+  adaptationType: 'maintain',
+  adaptationExplanation: '',
+);
+
+WorkoutSession _maintainSession(int index, double readiness) => WorkoutSession(
+  id: 'maintain-$index',
+  title: 'Maintain',
+  timestamp: DateTime(2026, 2, index + 1),
+  exerciseSessions: [_exercise(actualReps: 8, difficulty: 3)],
+  performanceScore: 70,
+  readinessScore: readiness,
   adaptationType: 'maintain',
   adaptationExplanation: '',
 );

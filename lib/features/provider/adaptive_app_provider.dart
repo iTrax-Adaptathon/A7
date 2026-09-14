@@ -65,6 +65,8 @@ class AdaptiveAppProvider extends ChangeNotifier {
     return '🟡 MAINTAIN CURRENT LOAD';
   }
 
+  bool get isDeloadSuggested => _latestAdaptation?.suggestDeload ?? false;
+
   Future<void> initialize() async {
     try {
       _isDemoMode = await LocalStorageService.getDemoMode();

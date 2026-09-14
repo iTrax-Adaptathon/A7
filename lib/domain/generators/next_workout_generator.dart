@@ -176,6 +176,9 @@ class NextWorkoutGenerator {
       'ex-shoulder-press',
     };
     final bool isCompound = compoundExercises.contains(exerciseId);
+    if (adaptation.suggestDeload) {
+      return (currentWeight * 0.80 * 2).roundToDouble() / 2;
+    }
     double multiplier = 1.0;
     if (adaptation.type == AdaptationType.progress) {
       multiplier = isCompound ? 1.05 : 1.025;

@@ -89,6 +89,35 @@ class WorkoutSummaryScreen extends StatelessWidget {
 
               const SizedBox(height: 28),
 
+              if (adaptation?.suggestDeload ?? false)
+                Container(
+                  width: double.infinity,
+                  padding: const EdgeInsets.all(16),
+                  decoration: BoxDecoration(
+                    color: AppColors.secondary.withAlpha(24),
+                    borderRadius: BorderRadius.circular(16),
+                    border: Border.all(color: AppColors.secondary),
+                  ),
+                  child: const Row(
+                    children: [
+                      Icon(
+                        Icons.pause_circle_outline_rounded,
+                        color: AppColors.secondary,
+                      ),
+                      SizedBox(width: 12),
+                      Expanded(
+                        child: Text(
+                          'DELOAD SUGGESTED: reduce the next session by 20% or take an extra rest day.',
+                          style: TextStyle(fontWeight: FontWeight.w600),
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+
+              if (adaptation?.suggestDeload ?? false)
+                const SizedBox(height: 16),
+
               // Metrics Grid
               Row(
                 children: [
@@ -260,6 +289,63 @@ class WorkoutSummaryScreen extends StatelessWidget {
                 ),
               ).animate().fadeIn(delay: 400.ms),
 
+              const SizedBox(height: 16),
+
+              if (adaptation != null)
+                Card(
+                  color: AppColors.surface,
+                  child: ExpansionTile(
+                    collapsedIconColor: AppColors.primary,
+                    iconColor: AppColors.primary,
+                    title: const Text(
+                      'VIEW ENGINE BREAKDOWN',
+                      style: TextStyle(
+                        fontSize: 13,
+                        fontWeight: FontWeight.bold,
+                        letterSpacing: 0.8,
+                      ),
+                    ),
+                    subtitle: const Text(
+                      'Scores and trend behind this recommendation',
+                      style: TextStyle(
+                        fontSize: 12,
+                        color: AppColors.textSecondary,
+                      ),
+                    ),
+                    children: [
+                      Padding(
+                        padding: const EdgeInsets.fromLTRB(20, 0, 20, 20),
+                        child: Wrap(
+                          spacing: 12,
+                          runSpacing: 12,
+                          children: [
+                            _buildBreakdownItem(
+                              'Performance',
+                              adaptation.performanceScore,
+                            ),
+                            _buildBreakdownItem(
+                              'Recovery',
+                              adaptation.recoveryScore,
+                            ),
+                            _buildBreakdownItem(
+                              'Readiness',
+                              adaptation.readinessScore,
+                            ),
+                            _buildBreakdownItem(
+                              'Confidence',
+                              adaptation.confidence,
+                            ),
+                            _buildBreakdownTextItem(
+                              'Trend',
+                              '${adaptation.trendDirection} (${adaptation.trendSlope >= 0 ? '+' : ''}${adaptation.trendSlope.toStringAsFixed(1)})',
+                            ),
+                          ],
+                        ),
+                      ),
+                    ],
+                  ),
+                ).animate().fadeIn(delay: 450.ms),
+
               const SizedBox(height: 32),
 
               SizedBox(
@@ -307,6 +393,35 @@ class WorkoutSummaryScreen extends StatelessWidget {
             value,
             style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
           ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildBreakdownItem(String label, double value) =>
+      _buildBreakdownTextItem(label, '${value.toStringAsFixed(0)}/100');
+
+  Widget _buildBreakdownTextItem(String label, String value) {
+    return Container(
+      width: 136,
+      padding: const EdgeInsets.all(12),
+      decoration: BoxDecoration(
+        color: AppColors.cardBg,
+        borderRadius: BorderRadius.circular(12),
+        border: Border.all(color: AppColors.cardBorder),
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text(
+            label,
+            style: const TextStyle(
+              fontSize: 11,
+              color: AppColors.textSecondary,
+            ),
+          ),
+          const SizedBox(height: 4),
+          Text(value, style: const TextStyle(fontWeight: FontWeight.bold)),
         ],
       ),
     );
