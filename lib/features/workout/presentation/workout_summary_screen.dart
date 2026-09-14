@@ -26,8 +26,10 @@ class WorkoutSummaryScreen extends StatelessWidget {
 
     final latestSession = history.first;
     final adaptation = provider.latestAdaptation;
-    final recWeight = adaptation?.recommendedWeight ?? 50.0;
-    final recReps = adaptation?.recommendedReps ?? 8;
+    final nextExercises = provider.nextWorkoutExercises;
+    final primaryNextExercise = nextExercises.isNotEmpty
+        ? nextExercises.first
+        : null;
 
     return Scaffold(
       backgroundColor: AppColors.background,
@@ -136,8 +138,9 @@ class WorkoutSummaryScreen extends StatelessWidget {
                           Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
-                              const Text(
-                                'BENCH PRESS',
+                              Text(
+                                primaryNextExercise?.exerciseName ??
+                                    'NEXT EXERCISE',
                                 style: TextStyle(
                                   fontWeight: FontWeight.bold,
                                   fontSize: 16,
@@ -145,7 +148,9 @@ class WorkoutSummaryScreen extends StatelessWidget {
                               ),
                               const SizedBox(height: 4),
                               Text(
-                                'Previous: 50.0 kg × 8',
+                                primaryNextExercise == null
+                                    ? 'No recommendation available'
+                                    : 'Previous: ${latestSession.exerciseSessions.first.sets.first.actualWeight.toStringAsFixed(1)} kg × ${latestSession.exerciseSessions.first.sets.first.actualReps}',
                                 style: const TextStyle(
                                   fontSize: 12,
                                   color: AppColors.textSecondary,
@@ -175,7 +180,9 @@ class WorkoutSummaryScreen extends StatelessWidget {
                                   ),
                                 ),
                                 Text(
-                                  '${recWeight.toStringAsFixed(1)} kg × $recReps',
+                                  primaryNextExercise == null
+                                      ? '--'
+                                      : '${primaryNextExercise.sets.first.targetWeight.toStringAsFixed(1)} kg × ${primaryNextExercise.sets.first.targetReps}',
                                   style: const TextStyle(
                                     fontSize: 16,
                                     fontWeight: FontWeight.bold,

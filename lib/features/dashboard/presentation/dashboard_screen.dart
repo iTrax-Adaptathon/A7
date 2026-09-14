@@ -283,10 +283,7 @@ class DashboardScreen extends StatelessWidget {
     BuildContext context,
     AdaptiveAppProvider provider,
   ) {
-    final adaptation = provider.latestAdaptation;
-    final recWeight = adaptation?.recommendedWeight ?? 50.0;
-    final recReps = adaptation?.recommendedReps ?? 8;
-    final recSets = adaptation?.recommendedSets ?? 3;
+    final nextExercises = provider.nextWorkoutExercises;
 
     return Card(
       color: AppColors.surface,
@@ -329,16 +326,19 @@ class DashboardScreen extends StatelessWidget {
 
             const SizedBox(height: 16),
 
-            // Target Exercise Presets
-            _buildExercisePreviewRow(
-              'Bench Press',
-              '$recSets × $recReps',
-              '${recWeight.toStringAsFixed(1)} kg',
-            ),
-            const Divider(height: 20, color: AppColors.cardBorder),
-            _buildExercisePreviewRow('Lat Pulldown', '3 × 10', '45.0 kg'),
-            const Divider(height: 20, color: AppColors.cardBorder),
-            _buildExercisePreviewRow('Shoulder Press', '3 × 8', '15.0 kg'),
+            // Generated values are exercise-specific, not a shared load.
+            ...nextExercises
+                .take(3)
+                .expand(
+                  (exercise) => [
+                    _buildExercisePreviewRow(
+                      exercise.exerciseName,
+                      '${exercise.sets.length} × ${exercise.sets.first.targetReps}',
+                      '${exercise.sets.first.targetWeight.toStringAsFixed(1)} kg',
+                    ),
+                    const Divider(height: 20, color: AppColors.cardBorder),
+                  ],
+                ),
 
             const SizedBox(height: 20),
 

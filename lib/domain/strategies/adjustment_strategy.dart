@@ -1,4 +1,5 @@
 import '../../data/models/adaptation_result.dart';
+import '../analyzers/signal_normalizer.dart';
 
 abstract class AdjustmentStrategy {
   AdaptationResult computeAdjustment({
@@ -9,6 +10,7 @@ abstract class AdjustmentStrategy {
     required int currentReps,
     required int currentSets,
     required List<String> baseFactors,
+    required NormalizedSignals signals,
   });
 }
 
@@ -22,14 +24,14 @@ class ProgressStrategy implements AdjustmentStrategy {
     required int currentReps,
     required int currentSets,
     required List<String> baseFactors,
+    required NormalizedSignals signals,
   }) {
-    final double recommendedWeight = currentWeight + 2.5;
     final List<String> reasons = [
       ...baseFactors,
-      '✓ Repetition completion exceeded target',
-      '✓ Subjective difficulty remained manageable',
-      '✓ Sleep and recovery ratings are optimal',
-      'System increased load by +2.5 kg for next session',
+      _repReason(signals.repCompletionRatio),
+      _difficultyReason(signals.difficultyFactor),
+      _recoveryReason(signals),
+      'Next-session load will be adjusted per exercise',
     ];
 
     return AdaptationResult(
@@ -37,7 +39,7 @@ class ProgressStrategy implements AdjustmentStrategy {
       readinessScore: readinessScore,
       performanceScore: performanceScore,
       confidence: confidence,
-      recommendedWeight: recommendedWeight,
+      recommendedWeight: currentWeight,
       recommendedReps: currentReps,
       recommendedSets: currentSets,
       reasons: reasons,
@@ -56,13 +58,14 @@ class MaintainStrategy implements AdjustmentStrategy {
     required int currentReps,
     required int currentSets,
     required List<String> baseFactors,
+    required NormalizedSignals signals,
   }) {
     final List<String> reasons = [
       ...baseFactors,
-      '✓ Completed target workload adequately',
-      '✓ Moderate difficulty rating reported',
-      '✓ Normal recovery state',
-      'System maintained current load ($currentWeight kg) to consolidate strength',
+      _repReason(signals.repCompletionRatio),
+      _difficultyReason(signals.difficultyFactor),
+      _recoveryReason(signals),
+      'Next-session load will retain the current exercise-specific baseline',
     ];
 
     return AdaptationResult(
@@ -89,14 +92,14 @@ class RegressStrategy implements AdjustmentStrategy {
     required int currentReps,
     required int currentSets,
     required List<String> baseFactors,
+    required NormalizedSignals signals,
   }) {
-    final double recommendedWeight = (currentWeight * 0.9).clamp(5.0, 300.0);
     final List<String> reasons = [
       ...baseFactors,
-      '⚠️ Repetition completion was below target',
-      '⚠️ High difficulty or elevated fatigue signals detected',
-      '⚠️ Reduced recovery/sleep hours reported',
-      'System reduced load to ${recommendedWeight.toStringAsFixed(1)} kg to promote recovery',
+      _repReason(signals.repCompletionRatio),
+      _difficultyReason(signals.difficultyFactor),
+      _recoveryReason(signals),
+      'Next-session load will be reduced per exercise to promote recovery',
     ];
 
     return AdaptationResult(
@@ -104,11 +107,36 @@ class RegressStrategy implements AdjustmentStrategy {
       readinessScore: readinessScore,
       performanceScore: performanceScore,
       confidence: confidence,
-      recommendedWeight: recommendedWeight,
+      recommendedWeight: currentWeight,
       recommendedReps: currentReps,
       recommendedSets: currentSets,
       reasons: reasons,
       statusTitle: '🔵 RECOVERY MODE',
     );
   }
+}
+
+String _repReason(double ratio) {
+  if (ratio >= 1.0) return 'Repetition completion met or exceeded the target';
+  if (ratio >= 0.85) return 'Repetition completion was close to the target';
+  return 'Repetition completion was below the target';
+}
+
+String _difficultyReason(double factor) {
+  if (factor >= 0.75) return 'Reported difficulty was manageable';
+  if (factor >= 0.45) return 'Reported difficulty was moderate';
+  return 'Reported difficulty was high';
+}
+
+String _recoveryReason(NormalizedSignals signals) {
+  final sleep = signals.sleepFactor;
+  final energy = signals.energyFactor;
+  final discomfort = signals.discomfortFactor;
+  if (sleep >= 0.8 && energy >= 0.8 && discomfort >= 0.8) {
+    return 'Sleep, energy, and discomfort signals supported recovery';
+  }
+  if (sleep < 0.5 || energy < 0.5 || discomfort < 0.5) {
+    return 'Recovery signals indicated elevated fatigue or discomfort';
+  }
+  return 'Recovery signals were mixed';
 }

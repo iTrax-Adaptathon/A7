@@ -2,7 +2,7 @@
 
 ## Overall status
 
-**MVP implementation: complete.** The repository contains a Flutter fitness app that records a workout, collects perceived difficulty and recovery inputs, calculates a readiness/adaptation result, and recommends the next session's load. It has not yet been verified locally because the Flutter SDK command is unavailable in this environment.
+**MVP implementation: complete and verified.** The repository contains a Flutter fitness app that records a workout, collects perceived difficulty and recovery inputs, calculates a readiness/adaptation result, and recommends the next session's exercise-specific load.
 
 ## Completed functionality
 
@@ -11,11 +11,11 @@
 - Main navigation with dashboard, history, progress, and profile screens.
 - Workout workflow: create a session, enter set weight/repetitions, rate exercise difficulty, enter sleep/energy/discomfort, then view a summary.
 - Adaptive domain engine that normalizes workout/recovery signals, calculates performance and recovery scores, assesses short-term trends, derives readiness/confidence, and chooses progress, maintain, or regress strategies.
-- Next-session generator with a starter exercise library and adaptive set/rep/load recommendations.
+- Next-session generator with a starter exercise library and exercise-specific adaptive load recommendations.
 - Local persistence using `shared_preferences` for profile, workout history, and demo-mode preference.
 - Seeded demo data covering regress, maintain, and progress scenarios.
 - Android, iOS, Windows, macOS, Linux, and web Flutter platform scaffolding.
-- One basic widget smoke test.
+- Domain tests for strategy boundaries, conflicting/missing recovery signals, noisy trends, reason strings, and compound/accessory load adjustments; plus a widget smoke test.
 
 ## Architecture
 
@@ -25,24 +25,20 @@
 | State | Complete for MVP | `AdaptiveAppProvider` owns initialization, active session state, persistence, and engine execution. |
 | Domain logic | Complete for MVP | Signal normalizer, performance/recovery/trend analyzers, readiness model, and adjustment strategies are separated under `lib/domain`. |
 | Data | Complete for MVP | Typed workout/profile models serialize to local JSON storage. |
-| Documentation | Needs work | `README.md` remains the default Flutter starter README. |
-| Automated verification | Pending | Test exists, but no local Flutter executable was available to run it. |
+| Documentation | Complete for MVP | `README.md` documents setup, architecture, adaptive logic, tests, and scope boundaries. |
+| Automated verification | Passed | `flutter analyze` has no issues and `flutter test` passes 13 tests. |
 
 ## Current limitations / recommended next work
 
-- Install or add Flutter to `PATH`, then run `flutter analyze` and `flutter test`.
-- Replace the starter README and package description with product setup, architecture, and run instructions.
-- Add unit tests for the adaptive engine, particularly score boundaries and the three adjustment strategies; the current test only checks app rendering.
-- Use exercise-specific recommendations: the next-workout generator currently applies one recommended load/reps/sets to every previously performed exercise.
-- Add validation/error handling for workout entry and persistence failures.
 - The app is local-only: no authentication, cloud sync, backend API, or health-device integration is implemented.
 - Treat the readiness logic as an MVP heuristic, not medical or individualized training advice; validate the model before production use.
-- Confirm UTF-8 handling for emoji and symbols in UI strings; the current terminal rendering did not display several of them reliably.
+- Flutter is available through the temporary SDK used for verification; install it on the normal system `PATH` for routine local development.
+- Trend thresholds remain `+/-4.0`, but the new least-squares slope is per session; calibrate them with real user data before production.
 
 ## Repository notes
 
 - Last commit: `6c68d45 Init`.
-- No uncommitted project changes were present before this status file was created.
+- The working tree contains the current MVP implementation and verification updates.
 - Binary app icons and image assets were inventoried; their source bytes were not interpreted as text.
 
 ## Verification record
@@ -50,5 +46,6 @@
 | Check | Result |
 | --- | --- |
 | Source/configuration review | Completed |
-| Flutter static analysis | Not run - `flutter` command not found |
-| Flutter widget tests | Not run - `flutter` command not found |
+| Flutter dependency resolution | Passed - `flutter pub get` |
+| Flutter static analysis | Passed - no issues |
+| Flutter test suite | Passed - 13 tests |

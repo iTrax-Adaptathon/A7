@@ -49,10 +49,20 @@ class TrendAnalyzer {
       );
     }
 
-    // Compute slope between latest and oldest in recent window
-    final double firstPerf = recent.last.performanceScore;
-    final double latestPerf = recent.first.performanceScore;
-    final double slope = latestPerf - firstPerf;
+    // Fit performance over time using all sessions in chronological order.
+    // `recent` is newest-first, so reverse its index for an oldest-to-newest x.
+    final int count = recent.length;
+    final double meanX = (count - 1) / 2;
+    final double meanY = avgPerf;
+    double numerator = 0;
+    double denominator = 0;
+    for (int index = 0; index < count; index++) {
+      final double x = (count - 1 - index).toDouble();
+      final double xDelta = x - meanX;
+      numerator += xDelta * (recent[index].performanceScore - meanY);
+      denominator += xDelta * xDelta;
+    }
+    final double slope = denominator == 0 ? 0 : numerator / denominator;
 
     TrendDirection dir = TrendDirection.stable;
     if (slope > 4.0) {

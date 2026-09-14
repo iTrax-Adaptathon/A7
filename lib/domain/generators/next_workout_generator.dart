@@ -165,6 +165,8 @@ class NextWorkoutGenerator {
     required double currentWeight,
     required AdaptationResult adaptation,
   }) {
+    // This is the single source of truth for final load magnitude. Strategy
+    // results describe direction; this generator applies it per exercise.
     const compoundExercises = {
       'ex-bench-press',
       'ex-squat',

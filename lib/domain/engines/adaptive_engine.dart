@@ -81,6 +81,7 @@ class AdaptiveEngine {
       currentReps: currentReps,
       currentSets: currentSets,
       baseFactors: readinessEval.factors,
+      signals: signals,
     );
   }
 

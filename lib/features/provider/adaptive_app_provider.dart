@@ -29,6 +29,26 @@ class AdaptiveAppProvider extends ChangeNotifier {
   AdaptationResult? get latestAdaptation => _latestAdaptation;
   String? get lastError => _lastError;
 
+  List<ExerciseSession> get nextWorkoutExercises =>
+      NextWorkoutGenerator.generateNextSessionExercises(
+        adaptation:
+            _latestAdaptation ??
+            AdaptationResult(
+              type: AdaptationType.maintain,
+              readinessScore: 78.0,
+              performanceScore: 80.0,
+              confidence: 70.0,
+              recommendedWeight: 50.0,
+              recommendedReps: 8,
+              recommendedSets: 3,
+              reasons: const ['Initial baseline workout'],
+              statusTitle: 'MAINTAIN CURRENT LOAD',
+            ),
+        previousSessions: _workoutHistory.isNotEmpty
+            ? _workoutHistory.first.exerciseSessions
+            : const [],
+      );
+
   double get currentReadinessScore {
     if (_latestAdaptation != null) return _latestAdaptation!.readinessScore;
     if (_workoutHistory.isNotEmpty) return _workoutHistory.first.readinessScore;

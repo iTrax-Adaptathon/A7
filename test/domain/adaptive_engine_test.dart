@@ -4,7 +4,9 @@ import 'package:adaptathon/data/models/recovery_record.dart';
 import 'package:adaptathon/data/models/set_record.dart';
 import 'package:adaptathon/data/models/workout_session.dart';
 import 'package:adaptathon/domain/analyzers/trend_analyzer.dart';
+import 'package:adaptathon/domain/analyzers/signal_normalizer.dart';
 import 'package:adaptathon/domain/engines/adaptive_engine.dart';
+import 'package:adaptathon/domain/strategies/adjustment_strategy.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 void main() {
@@ -136,6 +138,54 @@ void main() {
   });
 
   group('AdaptiveEngine signals', () {
+    test('least-squares trend treats zigzag performance as stable', () {
+      final history = [80.0, 60.0, 80.0, 60.0, 80.0]
+          .asMap()
+          .entries
+          .map(
+            (entry) => WorkoutSession(
+              id: 'zigzag-${entry.key}',
+              title: 'Zigzag',
+              timestamp: DateTime(2026, 1, entry.key + 1),
+              exerciseSessions: [_exercise(actualReps: 8, difficulty: 3)],
+              performanceScore: entry.value,
+              readinessScore: 70,
+              adaptationType: 'maintain',
+              adaptationExplanation: '',
+            ),
+          )
+          .toList();
+
+      final trend = TrendAnalyzer.analyze(history);
+
+      expect(trend.slope, closeTo(0, 0.01));
+      expect(trend.direction, TrendDirection.stable);
+    });
+
+    test('strategy reasons describe mediocre recovery honestly', () {
+      final result = ProgressStrategy().computeAdjustment(
+        readinessScore: 80,
+        performanceScore: 85,
+        confidence: 60,
+        currentWeight: 50,
+        currentReps: 8,
+        currentSets: 3,
+        baseFactors: const [],
+        signals: NormalizedSignals(
+          repCompletionRatio: 1,
+          loadComplianceRatio: 1,
+          difficultyFactor: 0.5,
+          sleepFactor: 0.6,
+          energyFactor: 0.6,
+          discomfortFactor: 1,
+        ),
+      );
+
+      expect(result.reasons, contains('Reported difficulty was moderate'));
+      expect(result.reasons, contains('Recovery signals were mixed'));
+      expect(result.reasons.join(' '), isNot(contains('optimal')));
+    });
+
     test(
       'strong performance with poor recovery does not automatically progress',
       () {

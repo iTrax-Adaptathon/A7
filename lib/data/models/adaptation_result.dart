@@ -5,6 +5,7 @@ class AdaptationResult {
   final double readinessScore; // 0.0 - 100.0
   final double performanceScore; // 0.0 - 100.0
   final double confidence; // 0.0 - 100.0
+  /// Reference load only. The generator owns the final, exercise-specific load.
   final double recommendedWeight;
   final int recommendedReps;
   final int recommendedSets;
