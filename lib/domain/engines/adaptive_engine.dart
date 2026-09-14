@@ -1,4 +1,5 @@
 import '../../data/models/user_profile.dart';
+import '../../data/models/user_calibration_profile.dart';
 import '../../data/models/adaptation_result.dart';
 import '../../data/models/exercise_session.dart';
 import '../../data/models/recovery_record.dart';
@@ -16,6 +17,7 @@ class AdaptiveEngine {
     required RecoveryRecord? recovery,
     required List<WorkoutSession> history,
     UserProfile? userProfile,
+    UserCalibrationProfile? calibration,
     double defaultWeight = 50.0,
     int defaultReps = 8,
     int defaultSets = 3,
@@ -24,6 +26,7 @@ class AdaptiveEngine {
     final signals = SignalNormalizer.normalize(
       exerciseSessions: exerciseSessions,
       recovery: recovery,
+      calibration: calibration,
     );
 
     // 2. Analyzers

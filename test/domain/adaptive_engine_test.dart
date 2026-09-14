@@ -3,6 +3,7 @@ import 'package:adaptathon/data/models/exercise_session.dart';
 import 'package:adaptathon/data/models/recovery_record.dart';
 import 'package:adaptathon/data/models/set_record.dart';
 import 'package:adaptathon/data/models/workout_session.dart';
+import 'package:adaptathon/data/models/user_calibration_profile.dart';
 import 'package:adaptathon/domain/analyzers/trend_analyzer.dart';
 import 'package:adaptathon/domain/analyzers/signal_normalizer.dart';
 import 'package:adaptathon/domain/engines/adaptive_engine.dart';
@@ -138,6 +139,29 @@ void main() {
   });
 
   group('AdaptiveEngine signals', () {
+    test('typical high difficulty rating is neutralized by calibration', () {
+      final calibration = UserCalibrationProfile();
+      for (var index = 0; index < 6; index++) { calibration.difficultyRatings.update(4); }
+      final signals = SignalNormalizer.normalize(exerciseSessions: [_exercise(actualReps: 8, difficulty: 4)], recovery: null, calibration: calibration);
+      expect(signals.difficultyFactor, closeTo(0.42, 0.02));
+    });
+
+    test('high rating above a low personal norm is harder than absolute scale', () {
+      final calibration = UserCalibrationProfile();
+      for (var index = 0; index < 6; index++) { calibration.difficultyRatings.update(2); }
+      final calibrated = SignalNormalizer.normalize(exerciseSessions: [_exercise(actualReps: 8, difficulty: 4)], recovery: null, calibration: calibration);
+      final absolute = SignalNormalizer.normalize(exerciseSessions: [_exercise(actualReps: 8, difficulty: 4)], recovery: null);
+      expect(calibrated.difficultyFactor, lessThan(absolute.difficultyFactor));
+    });
+
+    test('calibration does not apply before five observations', () {
+      final calibration = UserCalibrationProfile();
+      for (var index = 0; index < 4; index++) { calibration.difficultyRatings.update(2); }
+      final calibrated = SignalNormalizer.normalize(exerciseSessions: [_exercise(actualReps: 8, difficulty: 4)], recovery: null, calibration: calibration);
+      final absolute = SignalNormalizer.normalize(exerciseSessions: [_exercise(actualReps: 8, difficulty: 4)], recovery: null);
+      expect(calibrated.difficultyFactor, absolute.difficultyFactor);
+    });
+
     test('three consecutive maintains without readiness improvement suggest a deload', () {
       final history = List.generate(
         3,

@@ -63,6 +63,11 @@ class ProfileScreen extends StatelessWidget {
                                   fontSize: 13,
                                 ),
                               ),
+                              if (provider.calibration.difficultyRatings.count >=
+                                  AppConstants.kCalibrationMinSessions) ...[
+                                const SizedBox(height: 4),
+                                const Text('Your ratings are now personalized based on your history.', style: TextStyle(color: AppColors.accent, fontSize: 11)),
+                              ],
                             ],
                           ),
                         ),

@@ -1,5 +1,8 @@
+import '../../core/constants/app_constants.dart';
 import '../../data/models/exercise_session.dart';
 import '../../data/models/recovery_record.dart';
+import '../../data/models/user_calibration_profile.dart';
+import 'running_stats.dart';
 
 class NormalizedSignals {
   final double repCompletionRatio; // 0.0 to 1.0
@@ -23,6 +26,7 @@ class SignalNormalizer {
   static NormalizedSignals normalize({
     required List<ExerciseSession> exerciseSessions,
     required RecoveryRecord? recovery,
+    UserCalibrationProfile? calibration,
   }) {
     if (exerciseSessions.isEmpty) {
       return NormalizedSignals(
@@ -65,7 +69,14 @@ class SignalNormalizer {
         ? totalDifficulty / exerciseCount
         : 3.0;
     // Rating 1 (very easy) -> 1.0, Rating 5 (extremely hard) -> 0.1
-    final double diffFactor = ((5.5 - avgDifficulty) / 4.5).clamp(0.1, 1.0);
+    final absoluteDifficulty =
+        ((5.5 - avgDifficulty) / 4.5).clamp(0.1, 1.0);
+    final diffFactor = _calibrateFactor(
+      absoluteFactor: absoluteDifficulty,
+      rating: avgDifficulty,
+      stats: calibration?.difficultyRatings,
+      higherRatingIsBetter: false,
+    );
 
     // Sleep: 8h optimal (1.0), 4h or less (0.1)
     final double sleepHours = recovery?.sleepHours ?? 7.5;
@@ -73,7 +84,13 @@ class SignalNormalizer {
 
     // Energy: 1-5 rating -> 0.2 to 1.0
     final int energy = recovery?.energyRating ?? 4;
-    final double energyFact = (energy / 5.0).clamp(0.2, 1.0);
+    final absoluteEnergy = (energy / 5.0).clamp(0.2, 1.0);
+    final energyFact = _calibrateFactor(
+      absoluteFactor: absoluteEnergy,
+      rating: energy.toDouble(),
+      stats: calibration?.energyRatings,
+      higherRatingIsBetter: true,
+    );
 
     // Discomfort
     double discFact = 1.0;
@@ -92,5 +109,21 @@ class SignalNormalizer {
       energyFactor: energyFact,
       discomfortFactor: discFact,
     );
+  }
+
+  static double _calibrateFactor({
+    required double absoluteFactor,
+    required double rating,
+    required RunningStats? stats,
+    required bool higherRatingIsBetter,
+  }) {
+    if (stats == null || stats.count < AppConstants.kCalibrationMinSessions) {
+      return absoluteFactor;
+    }
+    // +/-2 SD limits one unusual rating; equal 50/50 blending keeps half of
+    // the absolute 1-5 safety signal while personalizing the other half.
+    final z = ((rating - stats.mean) / stats.stdDev).clamp(-2.0, 2.0);
+    final personal = higherRatingIsBetter ? (z + 2) / 4 : (2 - z) / 4;
+    return ((absoluteFactor * 0.5) + (personal * 0.5)).clamp(0.0, 1.0);
   }
 }

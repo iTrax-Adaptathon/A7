@@ -21,7 +21,11 @@ class RunningStats {
 
   /// Sample standard deviation. A neutral 1.0 prevents division by zero
   /// before enough observations exist to estimate a personal spread.
-  double get stdDev => _count < 2 ? 1.0 : math.sqrt(_m2 / (_count - 1));
+  double get stdDev {
+    if (_count < 2) return 1.0;
+    final calculated = math.sqrt(_m2 / (_count - 1));
+    return calculated > 0 ? calculated : 1.0;
+  }
 
   void update(double value) {
     _count++;

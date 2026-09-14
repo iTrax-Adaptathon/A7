@@ -7,6 +7,7 @@ import '../../data/models/exercise_session.dart';
 import '../../data/models/recovery_record.dart';
 import '../../data/models/set_record.dart';
 import '../../data/models/user_profile.dart';
+import '../../data/models/user_calibration_profile.dart';
 import '../../data/models/workout_session.dart';
 import '../../domain/engines/adaptive_engine.dart';
 import '../../domain/generators/next_workout_generator.dart';
@@ -18,6 +19,7 @@ class AdaptiveAppProvider extends ChangeNotifier {
   List<WorkoutSession> _workoutHistory = [];
   WorkoutSession? _activeWorkout;
   AdaptationResult? _latestAdaptation;
+  UserCalibrationProfile _calibration = UserCalibrationProfile();
   String? _lastError;
 
   UserProfile? get userProfile => _userProfile;
@@ -28,6 +30,7 @@ class AdaptiveAppProvider extends ChangeNotifier {
   WorkoutSession? get activeWorkout => _activeWorkout;
   AdaptationResult? get latestAdaptation => _latestAdaptation;
   String? get lastError => _lastError;
+  UserCalibrationProfile get calibration => _calibration;
 
   List<ExerciseSession> get nextWorkoutExercises =>
       NextWorkoutGenerator.generateNextSessionExercises(
@@ -72,6 +75,7 @@ class AdaptiveAppProvider extends ChangeNotifier {
     try {
       _isDemoMode = await LocalStorageService.getDemoMode();
       _userProfile = await LocalStorageService.getUserProfile();
+      _calibration = await LocalStorageService.getUserCalibration();
 
       if (_isDemoMode) {
         _workoutHistory = DemoDataSeeder.getDemoSessions();
@@ -273,6 +277,7 @@ class AdaptiveAppProvider extends ChangeNotifier {
       recovery: _activeWorkout!.recoveryRecord,
       history: _workoutHistory,
       userProfile: _userProfile,
+      calibration: _calibration,
     );
 
     final completedSession = WorkoutSession(
@@ -291,9 +296,12 @@ class AdaptiveAppProvider extends ChangeNotifier {
     _latestAdaptation = adaptation;
     _activeWorkout = null;
 
+    _recordCalibration(completedSession);
+
     if (!_isDemoMode) {
       try {
         await LocalStorageService.saveWorkoutHistory(_workoutHistory);
+        await LocalStorageService.saveUserCalibration(_calibration);
         _lastError = null;
       } catch (error) {
         _lastError = 'Workout completed, but it could not be saved locally.';
@@ -327,6 +335,22 @@ class AdaptiveAppProvider extends ChangeNotifier {
       recovery: latest.recoveryRecord,
       history: _workoutHistory.skip(1).toList(),
       userProfile: _userProfile,
+      calibration: _calibration,
     );
+  }
+
+  void _recordCalibration(WorkoutSession session) {
+    if (session.exerciseSessions.isNotEmpty) {
+      final totalDifficulty = session.exerciseSessions
+          .map((exercise) => exercise.difficultyRating)
+          .reduce((sum, rating) => sum + rating);
+      // One session-average observation avoids workouts with more exercises
+      // disproportionately changing the user's personal difficulty baseline.
+      _calibration.difficultyRatings.update(
+        totalDifficulty / session.exerciseSessions.length,
+      );
+    }
+    final energy = session.recoveryRecord?.energyRating;
+    if (energy != null) _calibration.energyRatings.update(energy.toDouble());
   }
 }

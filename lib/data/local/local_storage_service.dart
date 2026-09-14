@@ -4,6 +4,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 import '../../core/constants/app_constants.dart';
 import '../models/user_profile.dart';
+import '../models/user_calibration_profile.dart';
 import '../models/workout_session.dart';
 
 class LocalStorageService {
@@ -23,6 +24,30 @@ class LocalStorageService {
       return UserProfile.fromJson(map);
     } catch (error) {
       throw StateError('Saved profile data could not be read: $error');
+    }
+  }
+
+  static Future<void> saveUserCalibration(
+    UserCalibrationProfile calibration,
+  ) async {
+    final prefs = await SharedPreferences.getInstance();
+    final saved = await prefs.setString(
+      AppConstants.prefUserCalibration,
+      jsonEncode(calibration.toJson()),
+    );
+    if (!saved) throw StateError('Unable to save rating calibration locally.');
+  }
+
+  static Future<UserCalibrationProfile> getUserCalibration() async {
+    final prefs = await SharedPreferences.getInstance();
+    final jsonStr = prefs.getString(AppConstants.prefUserCalibration);
+    if (jsonStr == null || jsonStr.isEmpty) return UserCalibrationProfile();
+    try {
+      return UserCalibrationProfile.fromJson(
+        jsonDecode(jsonStr) as Map<String, dynamic>,
+      );
+    } catch (error) {
+      throw StateError('Saved rating calibration could not be read: $error');
     }
   }
 
