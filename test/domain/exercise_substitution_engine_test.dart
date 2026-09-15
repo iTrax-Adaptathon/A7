@@ -6,7 +6,7 @@ import 'package:adaptathon/domain/engines/exercise_substitution_engine.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 void main() {
-  const plan = [
+  final plan = [
     ExerciseSession(
       exerciseId: 'ex-bench-press',
       exerciseName: 'Bench Press',
@@ -38,7 +38,7 @@ void main() {
     });
 
     test('does not suggest an exercise absent from the seed map', () {
-      const unmappedPlan = [
+      final unmappedPlan = [
         ExerciseSession(
           exerciseId: 'ex-lat-pulldown',
           exerciseName: 'Lat Pulldown',
