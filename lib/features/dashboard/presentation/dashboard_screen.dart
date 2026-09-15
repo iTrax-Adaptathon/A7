@@ -56,61 +56,90 @@ class DashboardScreen extends StatelessWidget {
           const SizedBox(width: 8),
         ],
       ),
-      body: SafeArea(
-        child: SingleChildScrollView(
-          padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 16),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              // Judge Demo Banner
-              _buildDemoBanner(
-                context,
-                provider,
-                isDemo,
-              ).animate().fadeIn().slideY(begin: -0.1, end: 0),
-
-              const SizedBox(height: 16),
-
-              // Header Greeting
-              Text(
-                '${_getGreeting()}, $userName',
-                style: Theme.of(context).textTheme.headlineSmall
-                    ?.copyWith(fontWeight: FontWeight.w800),
-              ).animate().fadeIn(delay: 100.ms),
-
-              const SizedBox(height: 4),
-              const Text(
-                'Ready to train? Your adaptive engine is active.',
-                style: TextStyle(color: AppColors.textSecondary, fontSize: 14),
-              ).animate().fadeIn(delay: 150.ms),
-
-              const SizedBox(height: 24),
-
-              // Readiness Gauge Card
-              _buildReadinessCard(
-                context,
-                readiness,
-                statusTitle,
-              ).animate().fadeIn(delay: 200.ms).slideY(begin: 0.05, end: 0),
-
-              const SizedBox(height: 20),
-
-              // Today's Workout Card
-              _buildTodaysWorkoutCard(
-                context,
-                provider,
-              ).animate().fadeIn(delay: 300.ms).slideY(begin: 0.05, end: 0),
-
-              const SizedBox(height: 20),
-
-              // Adaptive Status Indicator Explanation
-              _buildAdaptiveStatusCard(
-                context,
-                statusTitle,
-              ).animate().fadeIn(delay: 400.ms),
-            ],
+      body: Stack(
+        children: [
+          Positioned(
+            top: 72,
+            right: -100,
+            child: IgnorePointer(
+              child: Container(
+                width: 280,
+                height: 280,
+                decoration: BoxDecoration(
+                  shape: BoxShape.circle,
+                  color: AppColors.readinessGlow.withAlpha(24),
+                  boxShadow: [
+                    BoxShadow(
+                      color: AppColors.readinessGlow.withAlpha(30),
+                      blurRadius: 90,
+                      spreadRadius: 28,
+                    ),
+                  ],
+                ),
+              ),
+            ),
           ),
-        ),
+          SafeArea(
+            child: SingleChildScrollView(
+              padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 16),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  // Judge Demo Banner
+                  _buildDemoBanner(
+                    context,
+                    provider,
+                    isDemo,
+                  ).animate().fadeIn().slideY(begin: -0.1, end: 0),
+
+                  const SizedBox(height: 16),
+
+                  // Header Greeting
+                  Text(
+                    '${_getGreeting()}, $userName',
+                    style: Theme.of(context).textTheme.headlineSmall?.copyWith(
+                      fontWeight: FontWeight.w800,
+                    ),
+                  ).animate().fadeIn(delay: 100.ms),
+
+                  const SizedBox(height: 4),
+                  const Text(
+                    'Ready to train? Your adaptive engine is active.',
+                    style: TextStyle(
+                      color: AppColors.textSecondary,
+                      fontSize: 14,
+                    ),
+                  ).animate().fadeIn(delay: 150.ms),
+
+                  const SizedBox(height: 24),
+
+                  // Readiness Gauge Card
+                  _buildReadinessCard(
+                    context,
+                    readiness,
+                    statusTitle,
+                  ).animate().fadeIn(delay: 200.ms).slideY(begin: 0.05, end: 0),
+
+                  const SizedBox(height: 20),
+
+                  // Today's Workout Card
+                  _buildTodaysWorkoutCard(
+                    context,
+                    provider,
+                  ).animate().fadeIn(delay: 300.ms).slideY(begin: 0.05, end: 0),
+
+                  const SizedBox(height: 20),
+
+                  // Adaptive Status Indicator Explanation
+                  _buildAdaptiveStatusCard(
+                    context,
+                    statusTitle,
+                  ).animate().fadeIn(delay: 400.ms),
+                ],
+              ),
+            ),
+          ),
+        ],
       ),
     );
   }
@@ -382,8 +411,19 @@ class DashboardScreen extends StatelessWidget {
 
             const SizedBox(height: 20),
 
-            SizedBox(
+            Container(
               width: double.infinity,
+              decoration: BoxDecoration(
+                gradient: AppColors.ctaGradient,
+                borderRadius: BorderRadius.circular(14),
+                boxShadow: [
+                  BoxShadow(
+                    color: AppColors.primary.withAlpha(80),
+                    blurRadius: 18,
+                    offset: const Offset(0, 8),
+                  ),
+                ],
+              ),
               child: ElevatedButton.icon(
                 onPressed: () {
                   provider.startNewWorkout();
@@ -391,6 +431,10 @@ class DashboardScreen extends StatelessWidget {
                 },
                 icon: const Icon(Icons.play_arrow_rounded),
                 label: const Text('START WORKOUT'),
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: Colors.transparent,
+                  shadowColor: Colors.transparent,
+                ),
               ),
             ),
           ],
@@ -452,9 +496,11 @@ class DashboardScreen extends StatelessWidget {
     String desc =
         'The user is performing adequately but should maintain load to consolidate strength.';
     if (statusTitle.contains('PROGRESS')) {
-      desc = 'The user is responding exceptionally well to recent training. Adaptive engine has increased training load.';
+      desc =
+          'The user is responding exceptionally well to recent training. Adaptive engine has increased training load.';
     } else if (statusTitle.contains('RECOVERY')) {
-      desc = 'Recent performance or recovery signals suggest reducing training stress to prevent fatigue.';
+      desc =
+          'Recent performance or recovery signals suggest reducing training stress to prevent fatigue.';
     }
 
     return Container(

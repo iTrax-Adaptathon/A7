@@ -39,12 +39,22 @@ class ActiveWorkoutScreen extends StatelessWidget {
                 style: TextStyle(color: AppColors.textSecondary),
               ),
               const SizedBox(height: 24),
-              ElevatedButton.icon(
-                onPressed: () {
-                  provider.startNewWorkout();
-                },
-                icon: const Icon(Icons.play_arrow_rounded),
-                label: const Text('START SESSION NOW'),
+              Container(
+                decoration: BoxDecoration(
+                  gradient: AppColors.ctaGradient,
+                  borderRadius: BorderRadius.circular(14),
+                ),
+                child: ElevatedButton.icon(
+                  onPressed: () {
+                    provider.startNewWorkout();
+                  },
+                  icon: const Icon(Icons.play_arrow_rounded),
+                  label: const Text('START SESSION NOW'),
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: Colors.transparent,
+                    shadowColor: Colors.transparent,
+                  ),
+                ),
               ),
             ],
           ),
@@ -98,12 +108,20 @@ class ActiveWorkoutScreen extends StatelessWidget {
                 color: AppColors.surface,
                 border: Border(top: BorderSide(color: AppColors.cardBorder)),
               ),
-              child: SizedBox(
+              child: Container(
                 width: double.infinity,
+                decoration: BoxDecoration(
+                  gradient: AppColors.ctaGradient,
+                  borderRadius: BorderRadius.circular(14),
+                ),
                 child: ElevatedButton.icon(
                   onPressed: () => context.push('/workout/difficulty'),
                   icon: const Icon(Icons.check_circle_outline_rounded),
                   label: const Text('PROCEED TO DIFFICULTY RATING'),
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: Colors.transparent,
+                    shadowColor: Colors.transparent,
+                  ),
                 ),
               ),
             ),

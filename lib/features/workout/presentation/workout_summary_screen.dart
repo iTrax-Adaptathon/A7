@@ -94,15 +94,15 @@ class WorkoutSummaryScreen extends StatelessWidget {
                   width: double.infinity,
                   padding: const EdgeInsets.all(16),
                   decoration: BoxDecoration(
-                    color: AppColors.secondary.withAlpha(24),
+                    color: AppColors.recovery.withAlpha(24),
                     borderRadius: BorderRadius.circular(16),
-                    border: Border.all(color: AppColors.secondary),
+                    border: Border.all(color: AppColors.recovery),
                   ),
                   child: const Row(
                     children: [
                       Icon(
                         Icons.pause_circle_outline_rounded,
-                        color: AppColors.secondary,
+                        color: AppColors.recovery,
                       ),
                       SizedBox(width: 12),
                       Expanded(
@@ -353,12 +353,20 @@ class WorkoutSummaryScreen extends StatelessWidget {
 
               const SizedBox(height: 32),
 
-              SizedBox(
+              Container(
                 width: double.infinity,
+                decoration: BoxDecoration(
+                  gradient: AppColors.ctaGradient,
+                  borderRadius: BorderRadius.circular(14),
+                ),
                 child: ElevatedButton.icon(
                   onPressed: () => context.go('/dashboard'),
                   icon: const Icon(Icons.home_rounded),
                   label: const Text('RETURN TO DASHBOARD'),
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: Colors.transparent,
+                    shadowColor: Colors.transparent,
+                  ),
                 ),
               ).animate().fadeIn(delay: 500.ms),
             ],

@@ -30,6 +30,14 @@ class AppColors {
     end: Alignment.bottomRight,
   );
 
+  /// Reserved for the app's highest-intent actions, such as starting or
+  /// completing a workout.
+  static const LinearGradient ctaGradient = LinearGradient(
+    colors: [primary, secondary],
+    begin: Alignment.centerLeft,
+    end: Alignment.centerRight,
+  );
+
   static const LinearGradient progressGradient = LinearGradient(
     colors: [Color(0xFF059669), Color(0xFF10B981)],
     begin: Alignment.topLeft,
@@ -47,4 +55,13 @@ class AppColors {
     begin: Alignment.topLeft,
     end: Alignment.bottomRight,
   );
+
+  static const LinearGradient recoveryGradient = LinearGradient(
+    colors: [Color(0xFF2563EB), recovery],
+    begin: Alignment.topLeft,
+    end: Alignment.bottomRight,
+  );
+
+  /// Low-contrast ambient color used for background depth, not content.
+  static const Color readinessGlow = primary;
 }
