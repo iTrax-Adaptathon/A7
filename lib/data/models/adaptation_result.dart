@@ -1,3 +1,5 @@
+import 'plateau_risk_assessment.dart';
+
 enum AdaptationType { progress, maintain, regress }
 
 class AdaptationResult {
@@ -9,6 +11,7 @@ class AdaptationResult {
   final double trendSlope;
   final String trendDirection;
   final bool suggestDeload;
+  final PlateauRiskAssessment? plateauRisk;
 
   /// Reference load only. The generator owns the final, exercise-specific load.
   final double recommendedWeight;
@@ -26,6 +29,7 @@ class AdaptationResult {
     this.trendSlope = 0.0,
     this.trendDirection = 'stable',
     this.suggestDeload = false,
+    this.plateauRisk,
     required this.recommendedWeight,
     required this.recommendedReps,
     required this.recommendedSets,
@@ -36,6 +40,7 @@ class AdaptationResult {
   AdaptationResult copyWith({
     AdaptationType? type,
     bool? suggestDeload,
+    PlateauRiskAssessment? plateauRisk,
     List<String>? reasons,
     String? statusTitle,
   }) {
@@ -48,6 +53,7 @@ class AdaptationResult {
       trendSlope: trendSlope,
       trendDirection: trendDirection,
       suggestDeload: suggestDeload ?? this.suggestDeload,
+      plateauRisk: plateauRisk ?? this.plateauRisk,
       recommendedWeight: recommendedWeight,
       recommendedReps: recommendedReps,
       recommendedSets: recommendedSets,

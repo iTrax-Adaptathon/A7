@@ -5,6 +5,7 @@ import '../../data/models/exercise_session.dart';
 import '../../data/models/recovery_record.dart';
 import '../../data/models/workout_session.dart';
 import '../analyzers/performance_analyzer.dart';
+import '../analyzers/plateau_risk_predictor.dart';
 import '../analyzers/recovery_analyzer.dart';
 import '../analyzers/signal_normalizer.dart';
 import '../analyzers/trend_analyzer.dart';
@@ -36,6 +37,10 @@ class AdaptiveEngine {
       userProfile: userProfile,
     );
     final trend = TrendAnalyzer.analyze(history);
+    final plateauRisk = PlateauRiskPredictor.assess(
+      history,
+      userProfile: userProfile,
+    );
 
     // 3. Readiness Model
     final readinessEval = ReadinessModel.evaluate(
@@ -89,8 +94,9 @@ class AdaptiveEngine {
       baseFactors: readinessEval.factors,
       signals: signals,
     );
+    final resultWithPlateauRisk = result.copyWith(plateauRisk: plateauRisk);
     if (_shouldSuggestDeload(history)) {
-      return result.copyWith(
+      return resultWithPlateauRisk.copyWith(
         suggestDeload: true,
         statusTitle: '🟣 DELOAD SUGGESTED',
         reasons: [
@@ -100,7 +106,7 @@ class AdaptiveEngine {
         ],
       );
     }
-    return result;
+    return resultWithPlateauRisk;
   }
 
   static bool _shouldSuggestDeload(List<WorkoutSession> history) {

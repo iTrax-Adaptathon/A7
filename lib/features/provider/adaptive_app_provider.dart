@@ -10,6 +10,7 @@ import '../../data/models/user_profile.dart';
 import '../../data/models/user_calibration_profile.dart';
 import '../../data/models/workout_session.dart';
 import '../../domain/engines/adaptive_engine.dart';
+import '../../domain/engines/exercise_substitution_engine.dart';
 import '../../domain/generators/next_workout_generator.dart';
 
 class AdaptiveAppProvider extends ChangeNotifier {
@@ -51,6 +52,13 @@ class AdaptiveAppProvider extends ChangeNotifier {
             ? _workoutHistory.first.exerciseSessions
             : const [],
         history: _workoutHistory,
+      );
+
+  /// Suggestions are opt-in; the generated workout itself is never changed.
+  List<SubstitutionSuggestion> get suggestedSubstitutions =>
+      ExerciseSubstitutionEngine.suggest(
+        nextWorkoutExercises,
+        _workoutHistory,
       );
 
   double get currentReadinessScore {

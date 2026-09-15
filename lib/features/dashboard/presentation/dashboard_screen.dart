@@ -284,6 +284,7 @@ class DashboardScreen extends StatelessWidget {
     AdaptiveAppProvider provider,
   ) {
     final nextExercises = provider.nextWorkoutExercises;
+    final substitutions = provider.suggestedSubstitutions;
 
     return Card(
       color: AppColors.surface,
@@ -339,6 +340,45 @@ class DashboardScreen extends StatelessWidget {
                     const Divider(height: 20, color: AppColors.cardBorder),
                   ],
                 ),
+
+            if (substitutions.isNotEmpty) ...[
+              const SizedBox(height: 4),
+              ...substitutions.map(
+                (suggestion) => Container(
+                  width: double.infinity,
+                  margin: const EdgeInsets.only(bottom: 8),
+                  padding: const EdgeInsets.all(12),
+                  decoration: BoxDecoration(
+                    color: AppColors.secondary.withAlpha(20),
+                    borderRadius: BorderRadius.circular(12),
+                    border: Border.all(
+                      color: AppColors.secondary.withAlpha(120),
+                    ),
+                  ),
+                  child: Row(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      const Icon(
+                        Icons.swap_horiz_rounded,
+                        color: AppColors.secondary,
+                        size: 20,
+                      ),
+                      const SizedBox(width: 10),
+                      Expanded(
+                        child: Text(
+                          suggestion.reason,
+                          style: const TextStyle(
+                            fontSize: 12,
+                            height: 1.35,
+                            color: AppColors.textSecondary,
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+            ],
 
             const SizedBox(height: 20),
 

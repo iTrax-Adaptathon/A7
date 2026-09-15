@@ -339,6 +339,11 @@ class WorkoutSummaryScreen extends StatelessWidget {
                               'Trend',
                               '${adaptation.trendDirection} (${adaptation.trendSlope >= 0 ? '+' : ''}${adaptation.trendSlope.toStringAsFixed(1)})',
                             ),
+                            if (adaptation.plateauRisk?.atRisk ?? false)
+                              _buildBreakdownTextItem(
+                                'Plateau risk',
+                                adaptation.plateauRisk!.reason,
+                              ),
                           ],
                         ),
                       ),
